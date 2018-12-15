@@ -15,6 +15,7 @@ import json
 import time
 
 from .camera import UnifiVideoCamera
+from .recording import UnifiVideoRecording
 
 try:
     type(unicode)
@@ -27,6 +28,8 @@ RECORDINGS_CACHE_EXPIRY = 60 * 2
 endpoints = {
     'login': 'login',
     'cameras': 'camera',
+    'recordings': lambda x: 'recording?idsOnly=false&' \
+        'sortBy=startTime&sort=desc&limit={}'.format(x),
 }
 
 class UnifiVideoAPI(object):
@@ -44,23 +47,23 @@ class UnifiVideoAPI(object):
         self.username = username
         self.password = password
         self.base_url = '{}://{}:{}/api/2.0/'.format(schema, addr, port)
+
         self.cameras = set()
-        self._init_cameras()
+        self.recordings = set()
+        self.refresh_cameras()
+        self.refresh_recordings()
 
-        self.nvr_recordings = {
-            'last_update': int(time.time()),
-            'recordings': [],
-        }
-
-    def _init_cameras(self):
-        camera_data = self.get(endpoints['cameras'])
-
-        if isinstance(camera_data, dict):
-            for camera in camera_data.get('data', []):
+    def refresh_cameras(self):
+        cameras = self.get(endpoints['cameras'])
+        if isinstance(cameras, dict):
+            for camera in cameras.get('data', []):
                 self.cameras.add(UnifiVideoCamera(self, camera))
 
-        for c in self.cameras:
-            print(c._id)
+    def refresh_recordings(self, limit = 300):
+        recordings = self.get(endpoints['recordings'](limit))
+        if isinstance(recordings, dict):
+            for recording in recordings.get('data', []):
+                self.recordings.add(UnifiVideoRecording(self, recording))
 
     def _ensure_headers(self, req):
         req.add_header('Content-Type', 'application/json')
@@ -169,5 +172,10 @@ class UnifiVideoAPI(object):
                     camera.name.lower() == search_term or \
                     camera.overlay_text.lower() == search_term:
                 return camera
+
+    def get_recording(self, rec_id):
+        for rec in self.recordings:
+            if rec._id == rec_id:
+                return rec
 
 __all__ = ['UnifiVideoAPI']

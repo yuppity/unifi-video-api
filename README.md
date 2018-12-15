@@ -36,6 +36,13 @@ uva.get_camera('Garage').set_recording_settings(full_time_record_enabled=True,
 # Enable motion recordings and set the pre capture period to five seconds
 uva.get_camera('Garage').set_recording_settings(motion_record_enabled=False,
   pre_padding_secs=5)
+
+# List recordings
+for rec in uva.recordings:
+  print(rec)
+
+# Download recording, write to local file recording01.mp4
+uva.get_recording('xxxxxxxxxxxxxxxxxxxx').download('recording01.mp4')
 ```
 
 
