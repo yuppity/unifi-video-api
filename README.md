@@ -1,12 +1,15 @@
 # unifi-video-api
-Python API for interfacing with Unifi NVR v3.9.12.
+Python API for interfacing with UniFi Video v3.9.12.
 
 ## Usage
 ```python
 from unifi_video import UnifiVideoAPI
 
-# Default kwargs: port = 7080, schema = http
-uva = UnifiVideoAPI('username', 'password', 'localhost')
+# Default kwargs: addr = 'localhost', port = 7080, schema = http
+uva = UnifiVideoAPI(username='username', password='password', addr='10.3.2.1')
+
+# Use API key (can be set per user in Unifi NVR user settings)
+uva = UnifiVideoAPI(api_key='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', addr='10.3.2.1')
 
 # Save snapshot from camera whose id, name or onscreen display text
 # is "Garage"
@@ -40,7 +43,7 @@ uva.get_camera('Garage').set_recording_settings(motion_record_enabled=False,
 Python2 or python3 (tested with 2.7, 3.7). No third-party dependencies.
 
 # Warning
-This software has been tested against Unifi NVR v3.9.12 and a single UVC G3
+This software has been tested against UniFi Video v3.9.12 and a single UVC G3
 camera. While unlikely, should any of the POST payloads result in software or
 hardware failure, the maintainer of this package is not liable.
 

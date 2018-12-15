@@ -1,9 +1,9 @@
 from __future__ import print_function, unicode_literals
 
 try:
-    from urllib.parse import urljoin
+    from urllib.parse import urljoin, urlparse, urlunparse
 except ImportError:
-    from urlparse import urljoin
+    from urlparse import urljoin, urlparse, urlunparse
 
 try:
     from urllib.request import urlopen, Request
@@ -31,7 +31,14 @@ endpoints = {
 
 class UnifiVideoAPI(object):
 
-    def __init__(self, username, password, addr, port=7080, schema='http'):
+    def __init__(self, api_key=None, username=None, password=None,
+            addr='localhost', port=7080, schema='http'):
+
+        if not api_key and not (username and password):
+            raise ValueError('To init {}, provide either API key ' \
+                'or username password pair'.format(type(self).__name__))
+
+        self.api_key = api_key
         self.login_attempts = 0
         self.jsession_av = None
         self.username = username
@@ -63,6 +70,11 @@ class UnifiVideoAPI(object):
 
     def _build_req(self, url, data=None, method=None):
         url = urljoin(self.base_url, url)
+        if self.api_key:
+            _s, _nloc, _path, _params, _q, _f = urlparse(url)
+            _q = '{}&apiKey={}'.format(_q, self.api_key) if len(_q) \
+                else 'apiKey={}'.format(self.api_key)
+            url = urlunparse((_s, _nloc, _path, _params, _q, _f))
         req = Request(url, bytes(json.dumps(data).encode('utf8'))) \
             if data else Request(url)
         self._ensure_headers(req)
@@ -103,6 +115,12 @@ class UnifiVideoAPI(object):
                 except UnicodeDecodeError:
                     return res.read()
 
+    def _handle_http_401(self, url, raw):
+        if self.api_key:
+            raise ValueError('Invalid API key')
+        elif self.login():
+            return self.get(url, raw)
+
     def get(self, url, raw=False):
         req = self._build_req(url)
         try:
@@ -111,8 +129,7 @@ class UnifiVideoAPI(object):
             return self._get_response_content(res, raw)
         except HTTPError as err:
             if err.code == 401 and self.login_attempts == 0:
-                if self.login():
-                    return self.get(url, raw)
+                return self._handle_http_401(url, raw)
             return False
 
     def post(self, url, data=None, raw=False, method=None):
@@ -126,11 +143,12 @@ class UnifiVideoAPI(object):
             return self._get_response_content(res, raw)
         except HTTPError as err:
             if err.code == 401 and url != 'login' and self.login_attempts == 0:
-                if self.login():
-                    return self.post(url, data, raw)
+                return self._handle_http_401(url, raw)
             return False
 
     def put(self, url, data=None, raw=False):
+        if self.api_key:
+            url += '&apiKey={}'.format(self.api_key)
         return self.post(url, data, raw, 'PUT')
 
     def login(self):
