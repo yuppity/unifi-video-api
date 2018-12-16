@@ -85,7 +85,7 @@ class UnifiVideoAPI(object):
             if data else Request(url)
         self._ensure_headers(req)
         if method:
-            req.get_method = lambda: 'PUT'
+            req.get_method = lambda: method
         return req
 
     def _parse_cookies(self, res, return_existing=False):
@@ -169,8 +169,6 @@ class UnifiVideoAPI(object):
             return False
 
     def put(self, url, data=None, raw=False):
-        if self.api_key:
-            url += '&apiKey={}'.format(self.api_key)
         return self.post(url, data, raw, 'PUT')
 
     def login(self):
