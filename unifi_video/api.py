@@ -12,7 +12,6 @@ except ImportError:
     from urllib2 import urlopen, Request, HTTPError
 
 import json
-import time
 
 from .camera import UnifiVideoCamera
 from .recording import UnifiVideoRecording
@@ -35,7 +34,11 @@ endpoints = {
 class UnifiVideoAPI(object):
 
     def __init__(self, api_key=None, username=None, password=None,
-            addr='localhost', port=7080, schema='http'):
+            addr='localhost', port=7080, schema='http', verify_cert=True):
+
+        if not verify_cert and schema == 'https':
+            import ssl
+            self._ssl_context = ssl._create_unverified_context()
 
         if not api_key and not (username and password):
             raise ValueError('To init {}, provide either API key ' \
@@ -59,7 +62,7 @@ class UnifiVideoAPI(object):
             for camera in cameras.get('data', []):
                 self.cameras.add(UnifiVideoCamera(self, camera))
 
-    def refresh_recordings(self, limit = 300):
+    def refresh_recordings(self, limit=300):
         recordings = self.get(endpoints['recordings'](limit))
         if isinstance(recordings, dict):
             for recording in recordings.get('data', []):
@@ -95,6 +98,12 @@ class UnifiVideoAPI(object):
                     self.jsession_av = part\
                         .replace('JSESSIONID_AV=', '').strip()
                     return True
+
+    def _urlopen(self, req):
+        try:
+            return urlopen(req, context=self._ssl_context)
+        except AttributeError:
+            return urlopen(req)
 
     def _get_response_content(self, res, raw=False):
         try:
@@ -137,7 +146,7 @@ class UnifiVideoAPI(object):
     def get(self, url, raw=False):
         req = self._build_req(url)
         try:
-            res = urlopen(req)
+            res = self._urlopen(req)
             self._parse_cookies(res)
             return self._get_response_content(res, raw)
         except HTTPError as err:
@@ -151,7 +160,7 @@ class UnifiVideoAPI(object):
         else:
             req = self._build_req(url, method)
         try:
-            res = urlopen(req)
+            res = self._urlopen(req)
             self._parse_cookies(res)
             return self._get_response_content(res, raw)
         except HTTPError as err:

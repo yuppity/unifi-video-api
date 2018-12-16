@@ -11,6 +11,10 @@ uva = UnifiVideoAPI(username='username', password='password', addr='10.3.2.1')
 # Use API key (can be set per user in Unifi NVR user settings)
 uva = UnifiVideoAPI(api_key='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', addr='10.3.2.1')
 
+# Use HTTPS and skip cert verification
+uva = UnifiVideoAPI(api_key='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', addr='10.3.2.1',
+  port=7443, schema='https', verify_cert=False)
+
 # Save snapshot from camera whose id, name or onscreen display text
 # is "Garage"
 uva.get_camera('Garage').snapshot('some/path/snapshot.jpg')
