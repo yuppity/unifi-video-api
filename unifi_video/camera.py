@@ -23,6 +23,13 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self.model = data.get('model', None)
         self.platform = data.get('platform', None)
         self.overlay_text = data.get('osdSettings', {}).get('tag', None)
+        self.mac_addr = utils.format_mac_addr(data.get('mac', 'ffffffffffff'))
+
+        try:
+            self.utc_h_offset = int(data.get('deviceSettings', {})\
+                .get('timezone', '').split('GMT').pop())
+        except (TypeError, ValueError):
+            self.utc_h_offset = 0
 
     def update(self, save=False):
         if save:
@@ -45,7 +52,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
         elif on:
             isp['irLedMode'] = 'manual'
 
-            # Unifi NVR sets this to 215 when using the UVC G3.
+            # UniFi Video sets this to 215 when using the UVC G3.
             # It seems unlikely this is a universal "on" value
             # that would work for all Ubiquiti cameras.
             isp['irLedLevel'] = 215
