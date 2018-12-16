@@ -19,6 +19,15 @@ uva.get_camera('Garage').snapshot('some/path/snapshot.jpg')
 for camera in uva.cameras:
   camera.snapshot()
 
+# Get footage from camera "Garage" for specific timespan.
+# (The resulting file will be 0 bytes when no footage is found.)
+uva.get_camera('Garage').recording_between('2018-12-01 00:00:00',
+  '2018-12-01 00:05:00')
+
+# Specify filename
+uva.get_camera('Garage').recording_between('2018-12-01 00:00:00',
+  '2018-12-01 00:05:00', 'first_mins_of_dec.mp4')
+
 # Change onscreen display text
 uva.get_camera('Garage').set_onscreen_text('Home garage')
 

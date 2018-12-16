@@ -9,6 +9,8 @@ endpoints = {
     'save': lambda x: 'camera/{}'.format(x),
     'data': lambda x: 'camera/{}'.format(x),
     'snapshot': lambda x: 'snapshot/camera/{}'.format(x),
+    'recording_span': lambda x, s, e: 'video/camera?' \
+        'startTime={}&endTime={}&cameras[]={}'.format(s, e, x)
 }
 
 class UnifiVideoCamera(UnifiVideoSingle):
@@ -43,6 +45,16 @@ class UnifiVideoCamera(UnifiVideoSingle):
         return self._api.get(endpoints['snapshot'](self._id),
             filename if filename else 'snapshot-{}-{}.jpg'.format(
                 self._id, int(time.time())))
+
+    def recording_between(self, start_time, end_time, filename=None):
+        start_time = utils.tz_shift(self.utc_h_offset * 3600,
+            utils.iso_str_to_epoch(start_time)) * 1000
+
+        end_time = utils.tz_shift(self.utc_h_offset * 3600,
+            utils.iso_str_to_epoch(end_time)) * 1000
+
+        return self._api.get(endpoints['recording_span'](
+            self._id, start_time, end_time), filename if filename else '')
 
     def ir_leds(self, on):
         isp = self._data.get('ispSettings', {})
