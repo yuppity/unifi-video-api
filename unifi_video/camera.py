@@ -13,16 +13,78 @@ endpoints = {
         'startTime={}&endTime={}&cameras[]={}'.format(s, e, x)
 }
 
+models = {
+    'UVC': {},
+
+    'UVC G3': {
+        'features': [
+            'external_accessory'
+        ]
+    },
+
+    'UVC G3 Dome': {
+        'features': [
+            'can_play_sound', 'toggable_led'
+        ]
+    },
+
+    'UVC Dome': {},
+
+    'UVC Pro': {
+        'features': [
+            'optical_zoom'
+        ]
+    },
+
+    'UVC G3 Pro': {
+        'features': [
+            'optical_zoom'
+        ]
+    },
+
+    'UVC G3 Flex': {
+        'features': [
+            'can_play_sound', 'toggable_led'
+        ]
+    },
+
+    'UVC Micro': {
+        'features': [
+            'can_play_sound', 'toggable_led'
+        ]
+    },
+
+    'UVC G3 Micro': {
+        'features': [
+            'can_play_sound', 'toggable_led'
+        ]
+    },
+
+    'Vision Pro': {
+        'features': [
+            'can_play_sound', 'toggable_led'
+        ]
+    },
+
+    'airCam': {},
+
+    'airCam Dome': {},
+
+    'airCam Mini': {},
+}
+
 class UnifiVideoCamera(UnifiVideoSingle):
 
     def _load_data(self, data):
-        if not data:
-            return
+
+        self.model = data.get('model', None)
+
+        if not self.model or not models.get(self.model, None):
+            raise NotImplementedError('Unsupported camera model')
 
         self._data = data
         self._id = data['_id']
         self.name = data.get('name', None)
-        self.model = data.get('model', None)
         self.platform = data.get('platform', None)
         self.overlay_text = data.get('osdSettings', {}).get('tag', None)
         self.mac_addr = utils.format_mac_addr(data.get('mac', 'ffffffffffff'))
