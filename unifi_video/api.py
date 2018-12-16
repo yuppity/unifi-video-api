@@ -102,13 +102,23 @@ class UnifiVideoAPI(object):
                 return json.loads(res.read().decode('utf8'))
             raise KeyError
         except KeyError:
+            upstream_filename = None
+
+            if 'Content-Disposition' in res.headers:
+                for part in res.headers['Content-Disposition'].split(';'):
+                    part = part.strip()
+                    if part.startswith('filename='):
+                        upstream_filename = part.split('filename=').pop()
+
             if isinstance(raw, str) or isinstance(raw, unicode):
-                with open(raw, 'wb') as f:
+                filename = raw if len(raw) else upstream_filename
+                with open(filename, 'wb') as f:
                     while True:
                         chunk = res.read(4096)
                         if not chunk:
                             break
                         f.write(chunk)
+                    f.truncate()
                     return True
             elif isinstance(raw, bool):
                 return res.read()
