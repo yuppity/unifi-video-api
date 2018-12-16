@@ -8,7 +8,7 @@ from . import utils
 endpoints = {
     'save': lambda x: 'camera/{}'.format(x),
     'data': lambda x: 'camera/{}'.format(x),
-    'snapshot': lambda x: 'snapshot/camera/{}'.format(x),
+    'snapshot': lambda x: 'snapshot/camera/{}?force=true'.format(x),
     'recording_span': lambda x, s, e: 'video/camera?' \
         'startTime={}&endTime={}&cameras[]={}'.format(s, e, x)
 }
