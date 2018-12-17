@@ -31,12 +31,14 @@ models = {
     'UVC Dome': {},
 
     'UVC Pro': {
+        'pro': True,
         'features': [
             'optical_zoom'
         ]
     },
 
     'UVC G3 Pro': {
+        'pro': True,
         'features': [
             'optical_zoom'
         ]
