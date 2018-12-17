@@ -74,8 +74,10 @@ models = {
 }
 
 class CameraModelError(ValueError):
-    def __init__(self, *args, **kwargs):
-        super(CameraModelError, self).__init__(self, *args, **kwargs)
+    def __init__(self, message=None):
+        if not message:
+            message = 'Unsupported camera model'
+        super(CameraModelError, self).__init__(message)
 
 class UnifiVideoCamera(UnifiVideoSingle):
 
@@ -84,7 +86,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self.model = data.get('model', None)
 
         if not self.model or not models.get(self.model, None):
-            raise CameraModelError('Unsupported camera model')
+            raise CameraModelError
 
         self._data = data
         self._id = data['_id']
