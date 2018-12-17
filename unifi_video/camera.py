@@ -75,6 +75,29 @@ models = {
     'airCam Mini': {},
 }
 
+def _determine_img_actionables(fw_platform, camera_model):
+    actionables = [
+        'brightness',
+        'contrast',
+        'hue',
+        'saturation',
+        'denoise',
+        'sharpness',
+        'orientation',
+    ]
+
+    if fw_platform == 'GEN1':
+        actionables.extend(['gamma', 'aeModeGen1'])
+    else:
+        actionables.extend(['wdr', 'aeMode'])
+
+    if camera_model in ['UVC Pro', 'UVC G3 Pro']:
+        actionables.extend(['irLedModePro', 'zoom', 'focus'])
+    else:
+        actionables.append('irLedMode')
+
+    return actionables
+
 class CameraModelError(ValueError):
     def __init__(self, message=None):
         if not message:
@@ -96,6 +119,8 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self.platform = data.get('platform', None)
         self.overlay_text = data.get('osdSettings', {}).get('tag', None)
         self.mac_addr = utils.format_mac_addr(data.get('mac', 'ffffffffffff'))
+        self._isp_actionables = _determine_img_actionables(self.platform,
+            self.model)
 
         try:
             self.utc_h_offset = int(data.get('deviceSettings', {})\
