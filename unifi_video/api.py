@@ -21,7 +21,6 @@ try:
 except NameError:
     unicode = str
 
-
 RECORDINGS_CACHE_EXPIRY = 60 * 2
 
 endpoints = {
@@ -29,9 +28,12 @@ endpoints = {
     'cameras': 'camera',
     'recordings': lambda x: 'recording?idsOnly=false&' \
         'sortBy=startTime&sort=desc&limit={}'.format(x),
+    'bootstrap': 'bootstrap',
 }
 
 class UnifiVideoAPI(object):
+
+    _supported_uv_versions = ['3.9.12']
 
     def __init__(self, api_key=None, username=None, password=None,
             addr='localhost', port=7080, schema='http', verify_cert=True):
@@ -55,6 +57,17 @@ class UnifiVideoAPI(object):
         self.recordings = set()
         self.refresh_cameras()
         self.refresh_recordings()
+
+        self._load_data(self.get(endpoints['bootstrap']))
+
+    def _load_data(self, data):
+        if not isinstance(data, dict):
+            raise ValueError('Server responded with unknown bootstrap data')
+        self._data = data.get('data', [{}])
+        self._name = self._data[0].get('nvrName', None)
+        self._version = self._data[0].get('systemInfo', {}).get('version', None)
+        self._is_supported = self._version in \
+            UnifiVideoAPI._supported_uv_versions
 
     def refresh_cameras(self):
         cameras = self.get(endpoints['cameras'])
@@ -194,5 +207,13 @@ class UnifiVideoAPI(object):
         for rec in self.recordings:
             if rec._id == rec_id:
                 return rec
+
+    def __str__(self):
+        return '{}: {}'.format(type(self).__name__, {
+            'name': self._name,
+            'version': self._version,
+            'supported_version': self._is_supported
+        })
+
 
 __all__ = ['UnifiVideoAPI']
