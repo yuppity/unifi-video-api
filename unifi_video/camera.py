@@ -73,6 +73,10 @@ models = {
     'airCam Mini': {},
 }
 
+class CameraModelError(ValueError):
+    def __init__(self, *args, **kwargs):
+        super(CameraModelError, self).__init__(self, *args, **kwargs)
+
 class UnifiVideoCamera(UnifiVideoSingle):
 
     def _load_data(self, data):
@@ -80,7 +84,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self.model = data.get('model', None)
 
         if not self.model or not models.get(self.model, None):
-            raise NotImplementedError('Unsupported camera model')
+            raise CameraModelError('Unsupported camera model')
 
         self._data = data
         self._id = data['_id']
