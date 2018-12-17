@@ -84,6 +84,49 @@ common_isp_actionables = [
     ['sharpness', 0, 100],
 ]
 
+def determine_img_actionables(fw_platform, camera_model):
+    actionables = map(lambda x: x[0], common_isp_actionables)
+    actionables.append('orientation')
+
+    if fw_platform == 'GEN1':
+        actionables.extend(['gamma', 'aeModeGen1'])
+    else:
+        actionables.extend(['wdr', 'aeMode'])
+
+    if camera_model in ['UVC Pro', 'UVC G3 Pro']:
+        actionables.extend(['irLedModePro', 'zoom', 'focus'])
+    else:
+        actionables.append('irLedMode')
+
+    return actionables
+
+def isp_actionable(floor=0, ceiling=100, name=None):
+    def decfn(fn):
+        def wrapper(camera, val):
+            fn_name = name or fn.__name__
+            if fn_name not in camera._isp_actionables:
+                return None
+            if val > ceiling:
+                val = ceiling
+            elif val < floor:
+                val = floor
+            return fn(camera, val)
+        return wrapper
+    return decfn
+
+def add_actionable(actionable):
+    name, floor, ceiling = actionable
+    def fn(self, val):
+        isp = self._data['ispSettings']
+        isp[name] = val
+        self.update(True)
+        if isp[name] == val:
+            return True
+        else:
+            return False
+    fn.__name__ = str(name)
+    setattr(UnifiVideoCamera, name, isp_actionable(floor, ceiling)(fn))
+
 class CameraModelError(ValueError):
     def __init__(self, message=None):
         if not message:
@@ -136,6 +179,16 @@ class UnifiVideoCamera(UnifiVideoSingle):
 
         return self._api.get(endpoints['recording_span'](
             self._id, start_time, end_time), filename if filename else '')
+
+    @isp_actionable(0, 3, name='wdr')
+    def dynamic_range(self, wdr):
+        isp = self._data['ispSettings']
+        isp['wdr'] = wdr
+        self.update(True)
+        if isp['wdr'] == wdr:
+            return True
+        else:
+            return False
 
     def ir_leds(self, on):
         isp = self._data.get('ispSettings', {})
@@ -193,49 +246,6 @@ class UnifiVideoCamera(UnifiVideoSingle):
         return '{}: {}'.format(
             type(self).__name__,
             {k: v for k, v in self.__dict__.items() if k in _filter})
-
-def determine_img_actionables(fw_platform, camera_model):
-    actionables = map(lambda x: x[0], common_isp_actionables)
-    actionables.append('orientation')
-
-    if fw_platform == 'GEN1':
-        actionables.extend(['gamma', 'aeModeGen1'])
-    else:
-        actionables.extend(['wdr', 'aeMode'])
-
-    if camera_model in ['UVC Pro', 'UVC G3 Pro']:
-        actionables.extend(['irLedModePro', 'zoom', 'focus'])
-    else:
-        actionables.append('irLedMode')
-
-    return actionables
-
-def isp_actionable(floor=0, ceiling=100, name=None):
-    def decfn(fn):
-        def wrapper(camera, val):
-            if (name and name not in camera._isp_actionables) or \
-                    (fn.__name__ not in camera._isp_actionables):
-                return None
-            if val > ceiling:
-                val = ceiling
-            elif val < floor:
-                val = floor
-            return fn(camera, val)
-        return wrapper
-    return decfn
-
-def add_actionable(actionable):
-    name, floor, ceiling = actionable
-    def fn(self, val):
-        isp = self._data['ispSettings']
-        isp[name] = val
-        self.update(True)
-        if isp[name] == val:
-            return True
-        else:
-            return False
-    fn.__name__ = str(name)
-    setattr(UnifiVideoCamera, name, isp_actionable(floor, ceiling)(fn))
 
 for actionable in common_isp_actionables:
     add_actionable(actionable)
