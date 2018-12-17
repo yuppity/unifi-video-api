@@ -190,23 +190,26 @@ class UnifiVideoCamera(UnifiVideoSingle):
         else:
             return False
 
-    def ir_leds(self, on):
+    def ir_leds(self, led_state):
+        if 'irLedMode' not in self._isp_actionables:
+            return None
         isp = self._data.get('ispSettings', {})
-
-        if on is 'auto':
+        isp['irLedLevel'] = 215
+        if led_state == 'auto':
             isp['irLedMode'] = 'auto'
-        elif on:
+        elif led_state == 'on':
             isp['irLedMode'] = 'manual'
-
-            # UniFi Video sets this to 215 when using the UVC G3.
-            # It seems unlikely this is a universal "on" value
-            # that would work for all Ubiquiti cameras.
-            isp['irLedLevel'] = 215
-        else:
+        elif led_state == 'off':
             isp['irLedMode'] = 'manual'
             isp['irLedLevel'] = 0
-
+        else:
+            return
+        verify = isp['irLedMode'] + str(isp['irLedLevel'])
         self.update(True)
+        if isp['irLedMode'] + str(isp['irLedLevel']) == verify:
+            return True
+        else:
+            return False
 
     def set_onscreen_text(self, text):
         osd = self._data.get('osdSettings', {})

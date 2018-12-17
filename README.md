@@ -35,11 +35,14 @@ uva.get_camera('Garage').recording_between('2018-12-01 00:00:00',
 # Change onscreen display text
 uva.get_camera('Garage').set_onscreen_text('Home garage')
 
-# Turn off IR leds
-uva.get_camera('Garage').ir_leds(False)
-
 # Set IR leds to auto mode
 uva.get_camera('Garage').ir_leds('auto')
+
+# Turn off IR leds (manual mode implied)
+uva.get_camera('Garage').ir_leds('off')
+
+# Turn of IR leds (manual mode implied)
+uva.get_camera('Garage').ir_leds('on')
 
 # Set camera to record at all times but disable separate recordings
 # for motion
