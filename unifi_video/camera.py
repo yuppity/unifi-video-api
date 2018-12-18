@@ -1,4 +1,5 @@
 from __future__ import print_function, unicode_literals
+from functools import wraps
 
 import time
 
@@ -102,10 +103,13 @@ def determine_img_actionables(fw_platform, camera_model):
 
 def isp_actionable(floor=0, ceiling=100, name=None):
     def decfn(fn):
-        def wrapper(camera, val):
+        @wraps(fn)
+        def wrapper(camera, val=None):
             fn_name = name or fn.__name__
             if fn_name not in camera._isp_actionables:
                 return None
+            if not val:
+                return fn(camera)
             if val > ceiling:
                 val = ceiling
             elif val < floor:
@@ -116,15 +120,31 @@ def isp_actionable(floor=0, ceiling=100, name=None):
 
 def add_actionable(actionable):
     name, floor, ceiling = actionable
-    def fn(self, val):
+    def fn(self, value=None):
         isp = self._data['ispSettings']
-        isp[name] = val
+        if not value:
+            return isp.get(name, -1)
+        isp[name] = value
         self.update(True)
-        if isp[name] == val:
+        if isp[name] == value:
             return True
         else:
             return False
     fn.__name__ = str(name)
+    fn.__doc__ =  """Control image {}
+
+    :param value: New {} value
+    :type value: int or None
+
+    :return: If value provided: `True` or `False`, depending on
+        whether new value was registered. If no value provided: current
+        {} value.
+
+    :rtype: `bool` or `int`
+
+    """.format(name, name, name)
+
+
     setattr(UnifiVideoCamera, name, isp_actionable(floor, ceiling)(fn))
 
 class CameraModelError(ValueError):
