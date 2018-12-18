@@ -212,14 +212,26 @@ class UnifiVideoCamera(UnifiVideoSingle):
             self._id, start_time, end_time), filename if filename else '')
 
     @isp_actionable(0, 3, name='wdr')
-    def dynamic_range(self, wdr):
-        isp = self._data['ispSettings']
-        isp['wdr'] = wdr
-        self.update(True)
-        if isp['wdr'] == wdr:
-            return True
-        else:
-            return False
+    def dynamic_range(self, wdr=None):
+        """Control image WDR (dynamic range). Input should be either `None`
+        or an `int` between `0` and `3`.
+
+        :param wdr: New WDR value
+        :type wdr: int or None
+
+        :return: If value provided: `True` or `False`, depending on
+            whether new value was registered. If no value provided: current
+            WDR value.
+
+        :rtype: `bool` or `int`
+        """
+
+        if 'wdr' not in self._isp_actionables:
+            raise NotImplementedError('This camera model ({}) has no ' \
+                'support controlling WDR (dynamic range)'.format(
+                    self.model))
+
+        return self._simple_isp_actionable('wdr', wdr)
 
     def ir_leds(self, led_state):
         if 'irLedMode' not in self._isp_actionables:
