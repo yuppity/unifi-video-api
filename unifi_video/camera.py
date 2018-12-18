@@ -177,6 +177,17 @@ class UnifiVideoCamera(UnifiVideoSingle):
         except (TypeError, ValueError):
             self.utc_h_offset = 0
 
+    def _simple_isp_actionable(self, setting_name, value):
+        isp = self._data['ispSettings']
+        if not value:
+            return isp.get(setting_name, -1)
+        isp[setting_name] = value
+        self.update(True)
+        if isp[setting_name] == value:
+            return True
+        else:
+            return False
+
     def update(self, save=False):
         if save:
             self._load_data(self._extract_data(
