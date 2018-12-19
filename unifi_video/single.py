@@ -1,4 +1,22 @@
 class UnifiVideoSingle(object):
+    """Base class that encapsulates common features of objects
+    that have unique IDs and that UniFi Video stores in their own
+    collection.
+
+    Examples of possible "singles" and their corresponding MongoDB collections:
+
+    - Cameras (``av.camera``)
+    - Recordings (``av.event``)
+    - Alerts (``av.alert``)
+    - Firmwares (``av.firmware``)
+    - Users (``av.user``)
+    - Maps (``av.map``)
+
+    :ivar _api: API instance
+    :vartype _api: :class:`~unifi_video.api.UnifiVideoAPI`
+    :ivar str _id: ID this single is identified as on the server side
+    """
+
     def __init__(self, api, data=None):
         self._api = api
         self._id = None
