@@ -430,5 +430,12 @@ class UnifiVideoCamera(UnifiVideoSingle):
             type(self).__name__,
             {k: v for k, v in self.__dict__.items() if k in _filter})
 
+# Define methods for controlling the isp actionables that are common to all
+# camera models. Other actionables, those not common to all models,
+# are controlled with methods defined in UnifiVideoCamera body.
+#
+# Note: "isp actionables" refer to contrast, saturation, hue etc., are in a
+# dict named "ispSettings", and to which the Uqituiti provided frontend
+# JavaScript refers to as "actionables".
 for actionable in common_isp_actionables:
     add_actionable(actionable)
