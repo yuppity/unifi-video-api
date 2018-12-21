@@ -210,6 +210,17 @@ class UnifiVideoCamera(UnifiVideoSingle):
         else:
             return False
 
+    def _toggable_osd_actionable(self, setting_name, enabled, ints=False):
+        osd = self._data['osdSettings']
+        if enabled is None:
+            return bool(osd[setting_name])
+        osd[setting_name] = int(enabled) if ints else enabled
+        self.update(True)
+        if osd[setting_name] == enabled:
+            return True
+        else:
+            return False
+
     def update(self, save=False):
         """Update settings from remote UniFi Video server (``self._api``).
         Call with ``True`` to write local settings to remote before updating.
