@@ -148,12 +148,34 @@ def add_actionable(actionable):
     setattr(UnifiVideoCamera, name, isp_actionable(floor, ceiling)(fn))
 
 class CameraModelError(ValueError):
+    """Unsupported camera model"""
+
     def __init__(self, message=None):
         if not message:
             message = 'Unsupported camera model'
         super(CameraModelError, self).__init__(message)
 
 class UnifiVideoCamera(UnifiVideoSingle):
+    """Represents a single camera connected to a UniFi Video server
+    (:class:`~unifi_video.api.UnifiVideoAPI`).
+
+    :ivar name: Camera name
+    :vartype name: str or None
+
+    :ivar model: Camera model
+    :vartype model: str or None
+
+    :ivar platform: Firmware platform
+    :vartype platform: str or None
+
+    :ivar str overlay_text: Custom text overlayed over the image
+    :ivar str mac_addr: Camera's MAC address
+    :ivar str _id: Camera's ID on the UniFi Video server it is attached to
+    :ivar dict _data: Complete copy of what the UniFi Video server knows
+        about the camera
+    :ivar list _isp_actionables: List of supported image settings
+    :ivar int utc_h_offset: UTC offset in hours
+    """
 
     def _load_data(self, data):
 
