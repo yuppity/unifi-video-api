@@ -320,21 +320,29 @@ class UnifiVideoCamera(UnifiVideoSingle):
         else:
             return False
 
-    def set_onscreen_text(self, text):
-        osd = self._data.get('osdSettings', {})
+    def onscreen_text(self, text=None):
+        """Set or get on-screen text.
+
+        :param text: New on-screen text
+        :type text: str or None
+        :return: `True` for successful value change, `Fail` for failed
+            attempt, current `str` value if called without ``text``.
+        :rtype: `bool` or `str`
+        """
+
+        if not text:
+            return self.overlay_text
+
+        osd = self._data['osdSettings']
         osd['overrideMessage'] = True
         osd['tag'] = text.strip()
+
         self.update(True)
 
-    def enable_onscreen_timestamp(self, on):
-        osd = self._data.get('osdSettings', {})
-        osd['enableDate'] = 1 if on else 0
-        self.update(True)
-
-    def enable_onscreen_watermark(self, on):
-        osd = self._data.get('osdSettings', {})
-        osd['enableLogo'] = 1 if on else 0
-        self.update(True)
+        if osd['tag'] == text:
+            return True
+        else:
+            return False
 
     def set_recording_settings(self, full_time_record_enabled=None,
             motion_record_enabled=None, pre_padding_secs=None,
