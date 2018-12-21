@@ -236,6 +236,18 @@ class UnifiVideoCamera(UnifiVideoSingle):
                 self._id, int(time.time())))
 
     def recording_between(self, start_time, end_time, filename=None):
+        """Download a recording of the camera's footage from an arbitrary
+        timespan, between ``start_time`` and ``end_time``.
+
+        :param str start_time: Start time
+        :param str end_time: End time
+        :param filename: Filename to save the recording to (a ZIP file).
+            Will use whatever the server provides if ``None``.
+        :type filename: str or None
+
+        Note: times should be in the format ``YYYY-MM-DD HH:MM:SS``.
+        """
+
         start_time = utils.tz_shift(self.utc_h_offset * 3600,
             utils.iso_str_to_epoch(start_time)) * 1000
 
