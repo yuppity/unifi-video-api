@@ -211,6 +211,12 @@ class UnifiVideoCamera(UnifiVideoSingle):
             return False
 
     def update(self, save=False):
+        """Update settings from remote UniFi Video server (``self._api``).
+        Call with ``True`` to write local settings to remote before updating.
+
+        :param bool save: Whether to push settings to the camera
+        """
+
         if save:
             self._load_data(self._extract_data(
                 self._api.put(endpoints['save'](self._id), self._data)))
@@ -219,6 +225,12 @@ class UnifiVideoCamera(UnifiVideoSingle):
                 self._api.get(endpoints['data'](self._id))))
 
     def snapshot(self, filename=None):
+        """Take and download snapshot.
+
+        :param filename: Filename to save the snapshot to. Optional.
+        :type filename: str or None
+        """
+
         return self._api.get(endpoints['snapshot'](self._id),
             filename if filename else 'snapshot-{}-{}.jpg'.format(
                 self._id, int(time.time())))
