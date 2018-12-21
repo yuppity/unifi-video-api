@@ -279,10 +279,28 @@ class UnifiVideoCamera(UnifiVideoSingle):
 
         return self._simple_isp_actionable('wdr', wdr)
 
-    def ir_leds(self, led_state):
-        if 'irLedMode' not in self._isp_actionables:
-            return None
-        isp = self._data.get('ispSettings', {})
+    def ir_leds(self, led_state=None):
+        """Control IR leds.
+
+        :param led_state: New led state (``auto``, ``on``, or ``off``).
+        :type led_state: str or None
+        :return: `True` or `False` depending on successful value change.
+            Current led state if called with no args.
+        :rtype: `bool` or `str`
+        """
+
+        isp = self._data['ispSettings']
+
+        if not led_state:
+            _s = isp['irLedMode']
+            _v = isp['irLedLevel']
+            if _s == 'auto':
+                return _s
+            elif _s == 'manual' and _v == 0:
+                return 'off'
+            elif _s == 'manual' and _v == 215:
+                return 'on'
+
         isp['irLedLevel'] = 215
         if led_state == 'auto':
             isp['irLedMode'] = 'auto'
@@ -292,9 +310,11 @@ class UnifiVideoCamera(UnifiVideoSingle):
             isp['irLedMode'] = 'manual'
             isp['irLedLevel'] = 0
         else:
-            return
+            raise ValueError('Unknown led_state: {}'.format(led_state))
+
         verify = isp['irLedMode'] + str(isp['irLedLevel'])
         self.update(True)
+
         if isp['irLedMode'] + str(isp['irLedLevel']) == verify:
             return True
         else:
