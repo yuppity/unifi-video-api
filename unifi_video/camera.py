@@ -1,5 +1,6 @@
 from __future__ import print_function, unicode_literals
 from functools import wraps
+from copy import deepcopy
 
 import time
 
@@ -271,7 +272,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
     @isp_actionable(0, 3, name='wdr')
     def dynamic_range(self, wdr=None):
         """Control image WDR (dynamic range). Input should be either `None`
-        or an `int` between `0` and `3`.
+        or an `int` between ``0`` and ``3``.
 
         :param wdr: New WDR value
         :type wdr: int or None
@@ -284,7 +285,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
         """
 
         if 'wdr' not in self._isp_actionables:
-            raise NotImplementedError('This camera model ({}) has no ' \
+            raise CameraModelError('This camera model ({}) has no ' \
                 'support controlling WDR (dynamic range)'.format(
                     self.model))
 
@@ -355,22 +356,73 @@ class UnifiVideoCamera(UnifiVideoSingle):
         else:
             return False
 
-    def set_recording_settings(self, full_time_record_enabled=None,
-            motion_record_enabled=None, pre_padding_secs=None,
+    def onscreen_timestamp(self, enabled=None):
+        """Set or get on-screen timestamp state.
+
+        :param enabled: New state
+        :type enabled: bool or None
+        :return: `True` for successful state change, `Fail` for failed
+            attempt. Either of the two for current state (when called
+            without the ``enabled`` arg)
+        :rtype: `bool`
+        """
+
+        return self._toggable_osd_actionable('enableDate', enabled, True)
+
+    def onscreen_watermark(self, enabled=None):
+        """Enable or disable on-screen watermark. Call without args to get
+        current setting.
+
+        :param enabled: Enable or disable
+        :type enabled: bool or None
+        :return: `True` for successful change, `Fail` for failed attempt.
+            One or the other for calls without args.
+        :rtype: `bool`
+        """
+
+        return self._toggable_osd_actionable('enableLogo', enabled, True)
+
+    def set_recording_settings(self, recording_mode=None, pre_padding_secs=None,
             post_padding_secs=None):
+        """Set recording mode and pre/post padding.
 
-        rec_settings = self._data.get('recordingSettings', {})
+        Possible recording modes:
+            - ``disable``: don't record
+            - ``fulltime``: record at all times
+            - ``motion``: record when motion detected
 
-        for k, v in utils.get_arguments().items():
-            if v is None:
-                continue
-            _k = utils.camel_to_snake(k)
-            if 'padding' in k:
-                rec_settings[_k] = int(v)
+        :param str recording_mode: See above
+        :param int pre_padding_secs: Number of seconds to include
+            pre-motion footage of
+        :param int post_padding_secs: Number of seconds to include
+            post-motion footage of
+        """
+
+        rec_settings = self._data['recordingSettings']
+
+        if recording_mode:
+            if recording_mode == 'disable':
+                rec_settings['fullTimeRecordEnabled'] = False
+                rec_settings['motionRecordEnabled'] = False
+            elif recording_mode == 'fulltime':
+                rec_settings['fullTimeRecordEnabled'] = True
+                rec_settings['motionRecordEnabled'] = True
+            elif recording_mode == 'motion':
+                rec_settings['fullTimeRecordEnabled'] = False
+                rec_settings['motionRecordEnabled'] = True
             else:
-                rec_settings[_k] = bool(v)
+                raise ValueError('Unknow recording mode "{}"'.format(
+                    recording_mode))
 
+        if pre_padding_secs != None:
+            rec_settings['prePaddingSecs'] = pre_padding_secs
+
+        if post_padding_secs != None:
+            rec_settings['postPaddingSecs'] = post_padding_secs
+
+        verify = deepcopy(rec_settings)
         self.update(True)
+        return verify == self._data['recordingSettings']
 
     def __str__(self):
         _filter = ['name', 'model', 'platform']
