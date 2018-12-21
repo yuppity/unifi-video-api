@@ -5,6 +5,7 @@ from datetime import datetime
 
 endpoints = {
     'download': lambda x: 'recording/{}/download'.format(x),
+    'delete': lambda x: 'recording?recordings[]={}&confirmed=true'.format(x),
 }
 
 class UnifiVideoRecording(UnifiVideoSingle):
@@ -29,6 +30,9 @@ class UnifiVideoRecording(UnifiVideoSingle):
         return self._api.get(endpoints['download'](self._id),
             filename if filename else 'recording-{}-{}.mp4'.format(
                 self._id, self.start_time.isoformat()))
+
+    def delete(self):
+        return self._api.delete(endpoints['delete'](self._id))
 
     def __str__(self):
         return '{}: {}'.format(type(self).__name__, {
