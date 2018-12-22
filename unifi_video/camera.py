@@ -87,7 +87,7 @@ common_isp_actionables = [
 ]
 
 def determine_img_actionables(fw_platform, camera_model):
-    actionables = map(lambda x: x[0], common_isp_actionables)
+    actionables = list(map(lambda x: x[0], common_isp_actionables))
     actionables.append('orientation')
 
     if fw_platform == 'GEN1':
