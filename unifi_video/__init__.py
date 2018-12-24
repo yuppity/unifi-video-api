@@ -1,3 +1,4 @@
-from .api import UnifiVideoAPI
+from .api import UnifiVideoAPI, UnifiVideoVersionError
+from .camera import CameraModelError
 
-__all__ = ['UnifiVideoAPI']
+__all__ = ['UnifiVideoAPI', 'UnifiVideoVersionError', 'CameraModelError']
