@@ -15,6 +15,7 @@ import json
 
 from .camera import UnifiVideoCamera
 from .recording import UnifiVideoRecording
+from .collections import UnifiVideoCollection
 
 try:
     type(unicode)
@@ -32,6 +33,8 @@ endpoints = {
 }
 
 class UnifiVideoAPI(object):
+    """Encapsulates a single UniFi Video server.
+    """
 
     _supported_uv_versions = ['3.9.12']
 
@@ -53,8 +56,8 @@ class UnifiVideoAPI(object):
         self.password = password
         self.base_url = '{}://{}:{}/api/2.0/'.format(schema, addr, port)
 
-        self.cameras = set()
-        self.recordings = set()
+        self.cameras = UnifiVideoCollection(UnifiVideoCamera)
+        self.recordings = UnifiVideoCollection(UnifiVideoRecording)
         self.refresh_cameras()
         self.refresh_recordings()
 
@@ -68,18 +71,6 @@ class UnifiVideoAPI(object):
         self._version = self._data[0].get('systemInfo', {}).get('version', None)
         self._is_supported = self._version in \
             UnifiVideoAPI._supported_uv_versions
-
-    def refresh_cameras(self):
-        cameras = self.get(endpoints['cameras'])
-        if isinstance(cameras, dict):
-            for camera in cameras.get('data', []):
-                self.cameras.add(UnifiVideoCamera(self, camera))
-
-    def refresh_recordings(self, limit=300):
-        recordings = self.get(endpoints['recordings'](limit))
-        if isinstance(recordings, dict):
-            for recording in recordings.get('data', []):
-                self.recordings.add(UnifiVideoRecording(self, recording))
 
     def _ensure_headers(self, req):
         req.add_header('Content-Type', 'application/json')
@@ -157,6 +148,8 @@ class UnifiVideoAPI(object):
             return self.get(url, raw)
 
     def get(self, url, raw=False):
+        """Send GET request
+        """
         req = self._build_req(url)
         try:
             res = self._urlopen(req)
@@ -168,10 +161,12 @@ class UnifiVideoAPI(object):
             return False
 
     def post(self, url, data=None, raw=False, method=None):
+        """Send POST request
+        """
         if data:
             req = self._build_req(url, data, method)
         else:
-            req = self._build_req(url, method)
+            req = self._build_req(url, method=method)
         try:
             res = self._urlopen(req)
             self._parse_cookies(res)
@@ -179,10 +174,18 @@ class UnifiVideoAPI(object):
         except HTTPError as err:
             if err.code == 401 and url != 'login' and self.login_attempts == 0:
                 return self._handle_http_401(url, raw)
+            raise
             return False
 
     def put(self, url, data=None, raw=False):
+        """Send PUT request
+        """
         return self.post(url, data, raw, 'PUT')
+
+    def delete(self, url, data=None, raw=False):
+        """Send DELETE request
+        """
+        return self.post(url, data, raw, 'DELETE')
 
     def login(self):
         self.login_attempts = 1
@@ -195,7 +198,32 @@ class UnifiVideoAPI(object):
         else:
             return False
 
+    def refresh_cameras(self):
+        """GET cameras from the server and update ``self.cameras``.
+        """
+        cameras = self.get(endpoints['cameras'])
+        if isinstance(cameras, dict):
+            for camera in cameras.get('data', []):
+                self.cameras.add(UnifiVideoCamera(self, camera))
+
+    def refresh_recordings(self, limit=300):
+        """GET recordings from the server and update local ``self.recordings``.
+
+        :param int limit: Limit the number of recording items
+            to fetch (``0`` for no limit).
+        """
+        recordings = self.get(endpoints['recordings'](limit))
+        if isinstance(recordings, dict):
+            for recording in recordings.get('data', []):
+                self.recordings.add(UnifiVideoRecording(self, recording))
+
     def get_camera(self, search_term):
+        """Get a camera whose ``name``, ``_id``, or ``overlay_text``
+        matches ``search_term``.
+
+        :return: Camera (if found).
+        :rtype: :class:`~unifi_video.camera.UnifiVideoCamera` or `NoneType`
+        """
         search_term = search_term.lower()
         for camera in self.cameras:
             if camera._id == search_term or \
