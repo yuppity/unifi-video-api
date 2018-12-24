@@ -30,14 +30,24 @@ endpoints = {
     'bootstrap': 'bootstrap',
 }
 
+class UnifiVideoVersionError(ValueError):
+    """Unsupported UniFi Video version"""
+
+    def __init__(self, message=None):
+        if not message:
+            message = 'Unsupported UniFi Video version'
+        super(UnifiVideoVersionError, self).__init__(message)
+
+
 class UnifiVideoAPI(object):
     """Encapsulates a single UniFi Video server.
     """
 
-    _supported_uv_versions = ['3.9.12']
+    _supported_ufv_versions = ['3.9.12']
 
     def __init__(self, api_key=None, username=None, password=None,
-            addr='localhost', port=7080, schema='http', verify_cert=True):
+            addr='localhost', port=7080, schema='http', verify_cert=True,
+            check_ufv_version=True):
 
         if not verify_cert and schema == 'https':
             import ssl
@@ -53,6 +63,7 @@ class UnifiVideoAPI(object):
         self.username = username
         self.password = password
         self.base_url = '{}://{}:{}/api/2.0/'.format(schema, addr, port)
+        self._version_stickler = check_ufv_version
 
         self.cameras = UnifiVideoCollection(UnifiVideoCamera)
         self.recordings = UnifiVideoCollection(UnifiVideoRecording)
@@ -68,7 +79,10 @@ class UnifiVideoAPI(object):
         self._name = self._data[0].get('nvrName', None)
         self._version = self._data[0].get('systemInfo', {}).get('version', None)
         self._is_supported = self._version in \
-            UnifiVideoAPI._supported_uv_versions
+            UnifiVideoAPI._supported_ufv_versions
+
+        if self._version_stickler and not self._is_supported:
+            raise UnifiVideoVersionError()
 
     def _ensure_headers(self, req):
         req.add_header('Content-Type', 'application/json')
