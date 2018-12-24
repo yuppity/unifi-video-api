@@ -174,7 +174,6 @@ class UnifiVideoAPI(object):
         except HTTPError as err:
             if err.code == 401 and url != 'login' and self.login_attempts == 0:
                 return self._handle_http_401(url, raw)
-            raise
             return False
 
     def put(self, url, data=None, raw=False):
