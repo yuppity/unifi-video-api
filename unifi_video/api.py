@@ -22,8 +22,6 @@ try:
 except NameError:
     unicode = str
 
-RECORDINGS_CACHE_EXPIRY = 60 * 2
-
 endpoints = {
     'login': 'login',
     'cameras': 'camera',
@@ -148,7 +146,12 @@ class UnifiVideoAPI(object):
             return self.get(url, raw)
 
     def get(self, url, raw=False):
-        """Send GET request
+        """Send GET request.
+
+        :param str url: API endpoint URL
+        :param raw: Set `str` filename if you want to save the response to a file.
+            Set to `True` if you want the to return raw response data.
+        :type raw: bool or str
         """
         req = self._build_req(url)
         try:
@@ -161,8 +164,23 @@ class UnifiVideoAPI(object):
             return False
 
     def post(self, url, data=None, raw=False, method=None):
-        """Send POST request
+        """Send POST request.
+
+        :param str url: API endpoint URL
+        :param data: Post data
+        :type data: dict or NoneType
+        :param raw: Set `str` filename if you want to save the response to a file.
+            Alternatively, set to `True` if you want the raw response as
+            return value.
+        :type raw: bool or str
+
+        Note:
+            - ``url`` will be appended to the API base URL
+            - Return value will be a ``dict`` if server responds
+                with ``Content-Type: application/json``, regardless of
+                of the ``raw`` param.
         """
+
         if data:
             req = self._build_req(url, data, method)
         else:
@@ -177,12 +195,12 @@ class UnifiVideoAPI(object):
             return False
 
     def put(self, url, data=None, raw=False):
-        """Send PUT request
+        """Send PUT request. See :func:`~unifi_video.UnifiVideoAPI.post`.
         """
         return self.post(url, data, raw, 'PUT')
 
     def delete(self, url, data=None, raw=False):
-        """Send DELETE request
+        """Send DELETE request. See :func:`~unifi_video.UnifiVideoAPI.post`.
         """
         return self.post(url, data, raw, 'DELETE')
 
