@@ -44,9 +44,9 @@ uva.get_camera('Garage').ir_leds('off')
 # Turn of IR leds (manual mode implied)
 uva.get_camera('Garage').ir_leds('on')
 
-# Set camera to record at all times and to pre capture 5 ecs
+# Set camera to record at all times and to pre capture 5 secs
 uva.get_camera('Garage').set_recording_settings('fulltime',
-  pre_adding_secs=5)
+  pre_padding_secs=5)
 
 # Set camera to record motion events only
 uva.get_camera('Garage').set_recording_settings('motion')
