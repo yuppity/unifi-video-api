@@ -231,11 +231,6 @@ class UnifiVideoAPI(object):
                     camera.overlay_text.lower() == search_term:
                 return camera
 
-    def get_recording(self, rec_id):
-        for rec in self.recordings:
-            if rec._id == rec_id:
-                return rec
-
     def __str__(self):
         return '{}: {}'.format(type(self).__name__, {
             'name': self._name,
