@@ -44,21 +44,22 @@ uva.get_camera('Garage').ir_leds('off')
 # Turn of IR leds (manual mode implied)
 uva.get_camera('Garage').ir_leds('on')
 
-# Set camera to record at all times but disable separate recordings
-# for motion
-uva.get_camera('Garage').set_recording_settings(full_time_record_enabled=True,
-  motion_record_enabled=False)
+# Set camera to record at all times and to pre capture 5 ecs
+uva.get_camera('Garage').set_recording_settings('fulltime',
+  pre_adding_secs=5)
 
-# Enable motion recordings and set the pre capture period to five seconds
-uva.get_camera('Garage').set_recording_settings(motion_record_enabled=False,
-  pre_padding_secs=5)
+# Set camera to record motion events only
+uva.get_camera('Garage').set_recording_settings('motion')
+
+# Disable recording altogether
+uva.get_camera('Garage').set_recording_settings('disable')
 
 # List recordings
 for rec in uva.recordings:
   print(rec)
 
 # Download recording, write to local file recording01.mp4
-uva.get_recording('xxxxxxxxxxxxxxxxxxxx').download('recording01.mp4')
+uva.recordings['xxxxxxxxxxxxxxxxxxxx'].download('recording01.mp4')
 ```
 
 
