@@ -1,6 +1,17 @@
 # unifi-video-api
 Python API for interfacing with UniFi Video v3.9.12.
 
+## Installation
+In your project directory:
+
+```
+git clone https://github.com/yuppity/unifi-video-api && \
+  mv unifi-video-api/unifi_video . && \
+  rm -r unifi-video-api
+```
+
+## Quickstart
+
 ## Usage
 ```python
 from unifi_video import UnifiVideoAPI
