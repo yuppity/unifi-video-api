@@ -123,7 +123,7 @@ def add_actionable(actionable):
     name, floor, ceiling = actionable
     def fn(self, value=None):
         isp = self._data['ispSettings']
-        if not value:
+        if value == None:
             return isp.get(name, -1)
         isp[name] = value
         self.update(True)
