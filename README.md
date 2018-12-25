@@ -12,9 +12,11 @@ git clone https://github.com/yuppity/unifi-video-api && \
 Alternatively, place the [unifi_video](unifi_video) folder somewhere in your filesystem and
 include the path in `$PYTHONPATH`.
 
-You shouldn't need any external libraries. *unifi-video-api* does use the
-[six](https://pypi.org/project/six/) library but will fallback to using the
-included *six* should it fail to import *six* from system level packages.
+You shouldn't need any external libraries, unless you want to run the tests or
+build the docs (see [requirements_dev.txt](requirements_dev.txt)).
+*unifi-video-api* does use the [six](https://pypi.org/project/six/) library but
+will fallback to using the included *six* should it fail to import *six* from
+system level packages.
 
 Both python 2.7+ and python3 are supported.
 
