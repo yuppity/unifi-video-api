@@ -6,11 +6,17 @@ In your project directory:
 
 ```
 git clone https://github.com/yuppity/unifi-video-api && \
-  mv unifi-video-api/unifi_video . && \
-  rm -r unifi-video-api
+  ln -s unifi-video-api/unifi_video .
 ```
 
-## Quickstart
+Alternatively, place the [unifi_video](unifi_video) folder somewhere in your filesystem and
+include the path in `$PYTHONPATH`.
+
+You shouldn't need any external libraries. *unifi-video-api* does use the
+[six](https://pypi.org/project/six/) library but will fallback to using the
+included *six* should it fail to import *six* from system level packages.
+
+Both python 2.7+ and python3 are supported.
 
 ## Usage
 ```python
@@ -74,10 +80,7 @@ uva.recordings['xxxxxxxxxxxxxxxxxxxx'].download('recording01.mp4')
 ```
 
 
-## Requirements
-Python2 or python3 (tested with 2.7, 3.7). No third-party dependencies.
-
-# Warning
+## Warning
 This software has been tested against UniFi Video v3.9.12 and a single UVC G3
 camera. While unlikely, should any of the POST payloads result in software or
 hardware failure, the maintainer of this package is not liable.
