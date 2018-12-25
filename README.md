@@ -1,4 +1,7 @@
 # unifi-video-api
+
+[![Build Status](https://travis-ci.org/yuppity/unifi-video-api.svg?branch=master)](https://travis-ci.org/yuppity/unifi-video-api)
+
 Python API for interfacing with UniFi Video v3.9.12.
 
 ## Installation
