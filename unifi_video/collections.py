@@ -16,3 +16,8 @@ class UnifiVideoCollection(dict):
             raise ValueError('Cannot add items other than of type {}'.format(
                 self._collection_type.__name__))
         self[single_dict._id] = single_dict
+
+    def __contains__(self, item):
+        if isinstance(item, self._collection_type) and hasattr(item, '_id'):
+            item = item._id
+        return super(UnifiVideoCollection, self).__contains__(item)
