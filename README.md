@@ -2,7 +2,38 @@
 
 [![Build Status](https://travis-ci.org/yuppity/unifi-video-api.svg?branch=master)](https://travis-ci.org/yuppity/unifi-video-api)
 
-Python API for interfacing with UniFi Video v3.9.12.
+Python API for interfacing with UniFi Video.
+
+**Supported UniFi Video versions**: v3.9.12.
+
+**Supported Ubiquiti camera models**: UVC, UVC G3, UVC G3 Dome, UVC Dome, UVC Pro, UVC G3 Pro,
+UVC G3 Flex, UVC Micro, UVC G3 Micro, airCam, airCam Dome, and airCam Mini.
+
+
+## Features
+**For a single UniFi Video server**:
+* Support both username/password and API key auths
+* Provide GET, POST, PUT, and DELETE methods
+* Handle session tracking and login when necessary
+* Provide iterable collections for cameras and recordings that the UniFi Video server
+  is aware of
+
+**Per camera**:
+* Set or show picture settings: brightness, contrast, saturation, hue, denoise,
+  sharpness, dynamic range
+* Set or show IR led state
+* Set or show on-display text
+* Set or show timestamp state
+* Set or show watermark/logo state
+* Set recording mode to fulltime, motion, or disabled
+* Set recording pre/post padding
+* Take and download pictures (snapshots)
+* Download camera footage between arbitrary start and end times
+
+**Per recording**:
+* Delete
+* Download
+* Snapshot (thumbnail) download
 
 ## Installation
 In your project directory:
