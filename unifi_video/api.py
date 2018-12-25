@@ -65,12 +65,12 @@ class UnifiVideoAPI(object):
         self.base_url = '{}://{}:{}/api/2.0/'.format(schema, addr, port)
         self._version_stickler = check_ufv_version
 
+        self._load_data(self.get(endpoints['bootstrap']))
+
         self.cameras = UnifiVideoCollection(UnifiVideoCamera)
         self.recordings = UnifiVideoCollection(UnifiVideoRecording)
         self.refresh_cameras()
         self.refresh_recordings()
-
-        self._load_data(self.get(endpoints['bootstrap']))
 
     def _load_data(self, data):
         if not isinstance(data, dict):
