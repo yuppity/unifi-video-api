@@ -1,0 +1,76 @@
+{
+  "data": [
+    {
+      "eventType": "fullTimeRecording",
+      "startTime": 1545731400242,
+      "endTime": 1545731402242,
+      "cameras": [
+        "5bfb35230f12f177788ec2ac"
+      ],
+      "locked": false,
+      "inProgress": true,
+      "markedForDeletion": false,
+      "meta": {
+        "cameraName": "UVC G3",
+        "key": "LyiOcksI",
+        "recordingPathId": "5bfb3674855154e721dd245b"
+      },
+      "_id": "5c21fd4b774aef78595d1fd4"
+    },
+    {
+      "eventType": "fullTimeRecording",
+      "startTime": 1545730800261,
+      "endTime": 1545731400243,
+      "cameras": [
+        "5bfb35230f12f177788ec2ac"
+      ],
+      "locked": false,
+      "inProgress": false,
+      "markedForDeletion": false,
+      "meta": {
+        "cameraName": "UVC G3",
+        "key": "ZBLqmDDM",
+        "recordingPathId": "5bfb3674855154e721dd245b"
+      },
+      "_id": "5c21faf3774aef78595d1ea7"
+    },
+    {
+      "eventType": "fullTimeRecording",
+      "startTime": 1545730200282,
+      "endTime": 1545730800262,
+      "cameras": [
+        "5bfb35230f12f177788ec2ac"
+      ],
+      "locked": false,
+      "inProgress": false,
+      "markedForDeletion": false,
+      "meta": {
+        "cameraName": "UVC G3",
+        "key": "fbtzUAfx",
+        "recordingPathId": "5bfb3674855154e721dd245b"
+      },
+      "_id": "5c21f89b774aef78595d1d7a"
+    },
+    {
+      "eventType": "motionRecording",
+      "startTime": 1545729928292,
+      "endTime": 1545729952290,
+      "cameras": [
+        "5bfb35230f12f177788ec2ac"
+      ],
+      "locked": false,
+      "inProgress": false,
+      "markedForDeletion": false,
+      "meta": {
+        "cameraName": "UVC G3",
+        "key": "fAtLstHc",
+        "recordingPathId": "5bfb3674855154e721dd245b"
+      },
+      "_id": "5c21f78e774aef78595d1cf3"
+    }
+  ],
+  "meta": {
+    "totalCount": 4,
+    "filteredCount": 4
+  }
+}

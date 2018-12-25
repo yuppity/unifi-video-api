@@ -1,0 +1,332 @@
+{
+  "data": [
+    {
+      "serviceState": "READY",
+      "cloudHost": "video.ubnt.com",
+      "nvrName": "archtest",
+      "isHardwareNvr": false,
+      "isLoggedIn": true,
+      "isFactoryDefault": false,
+      "user": {
+        "account": {
+          "name": "admin",
+          "email": "admin@example.com",
+          "username": "admin",
+          "language": "English",
+          "lastIp": "127.0.0.1",
+          "lastLogInTimestamp": 1545638108064,
+          "ssoId": null,
+          "inviteId": null,
+          "_id": "5bfb35200f12f177788ec2a6"
+        },
+        "userGroup": {
+          "groupType": "SUPER_ADMIN",
+          "_id": "5bfb35200f12f177788ec2a5"
+        },
+        "disabled": false,
+        "apiKey": "some_aPS4K_API_DkoI8pO3_key42z2Z",
+        "mobileKey": null,
+        "loginToken": null,
+        "enableApiAccess": true,
+        "enableLocalAccess": true,
+        "motionAlertSchedules": {
+          "5bfb35230f12f177788ec2ac": "always"
+        },
+        "subscribedMotion": [
+          "5bfb35230f12f177788ec2ac"
+        ],
+        "subscribedServerConnection": null,
+        "subscribedCameraConnection": null,
+        "adoptionKey": "ZrkDZWtH",
+        "admin": true,
+        "superAdmin": true,
+        "_id": "5bfb35200f12f177788ec2a7",
+        "enableEmail": false,
+        "enablePush": true,
+        "sysDisconnectEmailAlert": true,
+        "sysDisconnectPushAlert": true
+      },
+      "userGroups": [],
+      "alertSchedules": [],
+      "cameraSchedules": [],
+      "cameras": [
+        {
+          "name": "UVC G3",
+          "uuid": "",
+          "host": "10.1.2.2",
+          "model": "UVC G3",
+          "uptime": 1545375110412,
+          "firmwareVersion": "v4.4.8",
+          "firmwareBuild": "M_e4488fa",
+          "protocolVersion": 67,
+          "systemInfo": {
+            "cpuName": "ARMv7 Processor rev 1 (v7l)",
+            "cpuLoad": 30,
+            "memory": {
+              "used": 52596736,
+              "total": 358756352
+            },
+            "appMemory": null,
+            "nics": [
+              {
+                "desc": "eth0",
+                "mac": "",
+                "ip": "",
+                "rxBps": 20667,
+                "txBps": 952841
+              }
+            ],
+            "disk": null
+          },
+          "mac": "FCECDAD81CD1",
+          "managed": true,
+          "managedByOthers": true,
+          "provisioned": true,
+          "unmanagementRequested": false,
+          "lastSeen": 1545375131043,
+          "internalHost": "10.1.2.2",
+          "state": "CONNECTED",
+          "disconnectReason": null,
+          "platform": "GEN3L",
+          "managementToken": null,
+          "controllerHostAddress": "10.1.2.1",
+          "controllerHostPort": 7442,
+          "username": "ubnt",
+          "lastRecordingId": "5c21fd4b774aef78595d1fd4",
+          "lastRecordingStartTime": 1545731400242,
+          "deviceSettings": {
+            "name": "UVC G3",
+            "timezone": "GMT+2",
+            "region": "Europe/Helsinki",
+            "persists": false
+          },
+          "enableSuggestedVideoSettings": false,
+          "micVolume": 100,
+          "audioBitRate": 32000,
+          "channels": [
+          ],
+          "ispSettings": {
+            "brightness": 50,
+            "contrast": 50,
+            "denoise": 50,
+            "hue": 50,
+            "saturation": 50,
+            "sharpness": 50,
+            "flip": 0,
+            "mirror": 0,
+            "gamma": null,
+            "wdr": 1,
+            "aeMode": "auto",
+            "irLedMode": "manual",
+            "irLedLevel": 215,
+            "focusMode": "ztrig",
+            "focusPosition": 0,
+            "zoomPosition": 0,
+            "icrSensitivity": 2,
+            "aggressiveAntiFlicker": 0,
+            "enable3dnr": 1,
+            "dZoomStreamId": 4,
+            "dZoomCenterX": 50,
+            "dZoomCenterY": 50,
+            "dZoomScale": 0,
+            "lensDistortionCorrection": 1,
+            "enableExternalIr": 0,
+            "touchFocusX": 1001,
+            "touchFocusY": 1001,
+            "irOnValBrightness": 50,
+            "irOnStsBrightness": 0,
+            "irOnValContrast": 50,
+            "irOnStsContrast": 0,
+            "irOnValDenoise": 50,
+            "irOnStsDenoise": 0,
+            "irOnValHue": 50,
+            "irOnStsHue": 0,
+            "irOnValSaturation": 50,
+            "irOnStsSaturation": 0,
+            "irOnValSharpness": 50,
+            "irOnStsSharpness": 0
+          },
+          "osdSettings": {
+            "tag": "Test",
+            "overrideMessage": true,
+            "enableDate": 1,
+            "enableLogo": 0,
+            "enableStreamerStatsLevel": 0
+          },
+          "recordingSettings": {
+            "motionRecordEnabled": true,
+            "fullTimeRecordEnabled": true,
+            "channel": "0",
+            "prePaddingSecs": 1,
+            "postPaddingSecs": 0,
+            "storagePath": null
+          },
+          "scheduleId": null,
+          "zones": [
+          ],
+          "mapSettings": {
+          },
+          "networkStatus": {
+          },
+          "status": {
+          },
+          "authToken": {
+            "authToken": ""
+          },
+          "certSignature": "",
+          "hasDefaultCredentials": false,
+          "analyticsSettings": {
+            "enableSoundAlert": false,
+            "soundAlertVolume": 100,
+            "minimumMotionSecs": 3,
+            "endMotionAfterSecs": 7
+          },
+          "enableStatusLed": true,
+          "ledFaceAlwaysOnWhenManaged": true,
+          "enableSpeaker": true,
+          "systemSoundsEnabled": true,
+          "speakerVolume": 100,
+          "deleted": false,
+          "authStatus": "AUTHENTICATED",
+          "_id": "5bfb35230f12f177788ec2ac"
+        }
+      ],
+      "servers": [
+        {
+          "name": "archtest",
+          "uuid": "",
+          "host": "",
+          "model": "Unknown",
+          "uptime": 1543189757204,
+          "firmwareVersion": "3.9.12",
+          "firmwareBuild": "3",
+          "protocolVersion": null,
+          "systemInfo": {
+            "cpuName": "Intel Core(TM)2 Duo CPU     T8300  @ 2.40GHz",
+            "cpuLoad": 13.262870780770541,
+            "memory": {
+            },
+            "appMemory": {
+            },
+            "nics": [
+            ],
+            "disk": {
+            }
+          },
+          "cloudSettings": null,
+          "livePortSettings": {
+          },
+          "recordingSettings": {
+          },
+          "emsFileStats": null,
+          "systemSettings": {
+            "timeZone": "Europe/Helsinki",
+            "defaultLanguage": "English",
+            "disableUpdateCheck": false,
+            "disableStatsGathering": true,
+            "disableDiscovery": false,
+            "useUpnp": false,
+            "disableAutoCameraUpdate": false,
+            "googleMapsApiKey": null,
+            "cameraPassword": "Z3pTkeewqb"
+          },
+          "emailSettings": {
+          },
+          "alertSettings": {
+            "motionEmailCoolDownMs": 0
+          },
+          "_id": "5bfb34fd0f12f177788ec2a4"
+        }
+      ],
+      "maps": [
+      ],
+      "liveViews": [],
+      "settings": {
+        "systemSettings": {
+          "timeZone": "Europe/Helsinki",
+          "defaultLanguage": "English",
+          "disableUpdateCheck": false,
+          "disableStatsGathering": true,
+          "disableDiscovery": false,
+          "useUpnp": false,
+          "disableAutoCameraUpdate": false,
+          "googleMapsApiKey": null,
+          "cameraPassword": "Z3pTkeewqb"
+        },
+        "emailSettings": {
+        },
+        "alertSettings": {
+          "motionEmailCoolDownMs": 0
+        },
+        "livePortSettings": {
+        },
+        "_id": "5bfb34fd0f12f177788ec2a4"
+      },
+      "systemInfo": {
+        "version": "3.9.12",
+        "hash": "1f7595",
+        "buildType": "release",
+        "buildJobName": "ufv/v3.9.12",
+        "buildNumber": "3",
+        "buildBranch": "v3.9.12",
+        "time": "2018-11-20 04:43",
+        "platform": "Archrolling",
+        "mongoVersion": null,
+        "protocolVersion": 67,
+        "httpPort": 7080,
+        "httpsPort": 7443,
+        "liveWsPort": 7445,
+        "liveWssPort": 7446,
+        "maxExportLimit": 10000,
+        "localAddr": null
+      },
+      "firmwares": [
+        {
+          "platform": "GEN3LM",
+          "state": "READY",
+          "path": "/usr/lib/unifi-video/fw/S2LM/uvc.s2lm.v4.4.8.bin",
+          "version": "v4.4.8",
+          "revision": null,
+          "firmwareCode": "UVC.S2LM.v4.4.8.M_e4488fa.180911.1135",
+          "protocolVersion": 67,
+          "url": null,
+          "md5": "1f8dc9920ec3359dfd082b0d6b9400ca",
+          "source": "BUNDLED",
+          "_id": "5c0b05a0f6d8534e33701da9"
+        },
+        {
+          "platform": "GEN2",
+          "state": "READY",
+          "path": "/usr/lib/unifi-video/fw/A5S/uvc.a5s.v4.4.8.bin",
+          "version": "v4.4.8",
+          "revision": null,
+          "firmwareCode": "UVC.A5S.v4.4.8.M_e4488fa.180911.1113",
+          "protocolVersion": 67,
+          "url": null,
+          "md5": "2e6b7f1c940bb1ebb6e22dd9a9e752c9",
+          "source": "BUNDLED",
+          "_id": "5c0b05a1f6d8534e33701dab"
+        },
+        {
+          "platform": "GEN3L",
+          "state": "READY",
+          "path": "/usr/lib/unifi-video/fw/S2L/uvc.s2l.v4.4.8.bin",
+          "version": "v4.4.8",
+          "revision": null,
+          "firmwareCode": "UVC.S2L.v4.4.8.M_e4488fa.180911.1127",
+          "protocolVersion": 67,
+          "url": null,
+          "md5": "2b751fc949881ccde47dc34869b06d72",
+          "source": "BUNDLED",
+          "_id": "5c0b05a1f6d8534e33701dad"
+        }
+      ],
+      "adminUserGroupId": "5bfb35200f12f177788ec2ab",
+      "newCriticalAlerts": 0
+    }
+  ],
+  "meta": {
+    "totalCount": 1,
+    "filteredCount": 1
+  }
+}
