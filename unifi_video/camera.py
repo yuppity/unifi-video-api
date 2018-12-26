@@ -108,7 +108,8 @@ def isp_actionable(floor=0, ceiling=100, name=None):
         def wrapper(camera, val=None):
             fn_name = name or fn.__name__
             if fn_name not in camera._isp_actionables:
-                return None
+                raise CameraModelError('This camera model ({}) has no ' \
+                    'support for {} control'.format(camera.model, fn_name))
             if val == None:
                 return fn(camera)
             if val > ceiling:
@@ -283,11 +284,6 @@ class UnifiVideoCamera(UnifiVideoSingle):
 
         :rtype: `bool` or `int`
         """
-
-        if 'wdr' not in self._isp_actionables:
-            raise CameraModelError('This camera model ({}) has no ' \
-                'support controlling WDR (dynamic range)'.format(
-                    self.model))
 
         return self._simple_isp_actionable('wdr', wdr)
 
