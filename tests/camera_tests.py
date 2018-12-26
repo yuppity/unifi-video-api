@@ -144,6 +144,13 @@ class BasicCameraTests(unittest.TestCase):
                 camera._isp_actionables.remove('wdr')
                 self.assertRaises(CameraModelError, camera.dynamic_range, 2)
 
+                # Test IR led control
+                for each in ['auto', 'off', 'on']:
+                    self.assertEqual(camera.ir_leds(each), True)
+                    self.assertEqual(camera.ir_leds(), each)
+
+                self.assertRaises(ValueError, camera.ir_leds, 'something')
+
                 break
 
 if __name__ == '__main__':

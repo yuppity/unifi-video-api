@@ -1,4 +1,5 @@
 import os.path
+import random
 
 from unifi_video import UnifiVideoAPI, CameraModelError, \
     UnifiVideoVersionError
@@ -8,16 +9,23 @@ try:
 except ModuleNotFoundError:
     from unittest.mock import Mock, patch, MagicMock
 
-def mocked_response(data=None, res_json=True):
+def mocked_response(data=None, res_json=True, set_cookies=False, arg_pile=[]):
 
     def response(req):
+
+        args = arg_pile.pop() if len(arg_pile) else {}
+
+        _data = args.get('data', data)
+        _res_json = args.get('res_json', res_json)
+        _set_cookies = args.get('set_cookies', set_cookies)
+
         url = req.get_full_url()
 
         mocked_res = Mock()
         res_data_file = None
 
-        if data:
-            mocked_res.read.return_value = data
+        if _data:
+            mocked_res.read.return_value = _data
 
         else:
             if 'bootstrap' in url:
@@ -34,8 +42,17 @@ def mocked_response(data=None, res_json=True):
             with open(filename, 'rb') as f:
                 mocked_res.read.return_value = f.read()
 
-        if res_json:
+        if _res_json:
             mocked_res.headers = {'Content-Type': 'application/json'}
+
+        if _set_cookies == True:
+            mocked_res.headers['Set-Cookie'] = 'JSESSIONID_AV={}; ' \
+                'Path=/; HttpOnly'.format(
+                    ''.join(random.choice('ABCDEF123456789') for i in range(32)))
+        elif isinstance(_set_cookies, dict):
+            # TODO
+            pass
+
 
         return mocked_res
 
