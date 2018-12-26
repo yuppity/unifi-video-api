@@ -109,7 +109,7 @@ def isp_actionable(floor=0, ceiling=100, name=None):
             fn_name = name or fn.__name__
             if fn_name not in camera._isp_actionables:
                 return None
-            if not val:
+            if val == None:
                 return fn(camera)
             if val > ceiling:
                 val = ceiling
@@ -202,7 +202,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
 
     def _simple_isp_actionable(self, setting_name, value):
         isp = self._data['ispSettings']
-        if not value:
+        if value == None:
             return isp.get(setting_name, -1)
         isp[setting_name] = value
         self.update(True)
