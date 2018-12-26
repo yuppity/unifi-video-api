@@ -93,6 +93,7 @@ class BasicCameraTests(unittest.TestCase):
 
         ufva = get_ufva_w_mocked_urlopen(mocked_urlopen)
 
+        # Test brightness, contrast, etc.
         with patch('unifi_video.api.UnifiVideoAPI.put') as put:
 
             from unifi_video.camera import common_isp_actionables
@@ -125,11 +126,24 @@ class BasicCameraTests(unittest.TestCase):
             ]
 
             for camera in ufva.cameras:
+
+                # Test simple isp actionables
                 isp_callable = getattr(camera, isp_method)
                 for each in args_and_expected_returns:
                     arg, ret = each
                     isp_callable(arg)
                     self.assertEqual(isp_callable(), ret)
+
+                # Test dynamic range (WDR)
+                # Floor: 0, Ceiling: 3
+                for each in [[-5, 0], [5, 3], [2, 2]]:
+                    arg, ret = each
+                    camera.dynamic_range(arg)
+                    self.assertEqual(camera.dynamic_range(), ret)
+
+                camera._isp_actionables.remove('wdr')
+                self.assertRaises(CameraModelError, camera.dynamic_range, 2)
+
                 break
 
 if __name__ == '__main__':
