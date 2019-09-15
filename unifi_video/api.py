@@ -83,15 +83,19 @@ class UnifiVideoAPI(object):
         self._version = self._data[0].get('systemInfo', {}).get('version', None)
 
         self._is_supported = False
+
         if self._version in UnifiVideoAPI._supported_ufv_versions:
             self._is_supported = True
         else:
+            v_actual = LooseVersion(self._version)
             for curr_version in UnifiVideoAPI._supported_ufv_version_ranges:
-                v_actual = LooseVersion(self._version)
                 v_low = LooseVersion(curr_version[0])
                 v_high = LooseVersion(curr_version[1])
-                if v_actual >= v_low and v_actual <= v_high:
-                    self._is_supported = True
+                try:
+                    if v_actual >= v_low and v_actual <= v_high:
+                        self._is_supported = True
+                        break
+                except TypeError as e:
                     break
 
         if self._version_stickler and not self._is_supported:
