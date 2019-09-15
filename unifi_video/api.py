@@ -17,6 +17,8 @@ from .camera import UnifiVideoCamera
 from .recording import UnifiVideoRecording
 from .collections import UnifiVideoCollection
 
+from distutils.version import LooseVersion
+
 try:
     type(unicode)
 except NameError:
@@ -43,7 +45,8 @@ class UnifiVideoAPI(object):
     """Encapsulates a single UniFi Video server.
     """
 
-    _supported_ufv_versions = ['3.9.12']
+    _supported_ufv_versions = []
+    _supported_ufv_version_ranges = [['3.9.12','3.10.6']]
 
     def __init__(self, api_key=None, username=None, password=None,
             addr='localhost', port=7080, schema='http', verify_cert=True,
@@ -78,8 +81,18 @@ class UnifiVideoAPI(object):
         self._data = data.get('data', [{}])
         self._name = self._data[0].get('nvrName', None)
         self._version = self._data[0].get('systemInfo', {}).get('version', None)
-        self._is_supported = self._version in \
-            UnifiVideoAPI._supported_ufv_versions
+
+        self._is_supported = False
+        if self._version in UnifiVideoAPI._supported_ufv_versions:
+            self._is_supported = True
+        else:
+            for curr_version in UnifiVideoAPI._supported_ufv_version_ranges:
+                v_actual = LooseVersion(self._version)
+                v_low = LooseVersion(curr_version[0])
+                v_high = LooseVersion(curr_version[1])
+                if v_actual >= v_low and v_actual <= v_high:
+                    self._is_supported = True
+                    break
 
         if self._version_stickler and not self._is_supported:
             raise UnifiVideoVersionError()
