@@ -64,6 +64,10 @@ uva = UnifiVideoAPI(username='username', password='password', addr='10.3.2.1')
 # Use API key (can be set per user in Unifi NVR user settings)
 uva = UnifiVideoAPI(api_key='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', addr='10.3.2.1')
 
+# Skip version checking
+uva = UnifiVideoAPI(api_key='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', addr='10.3.2.1',
+  check_ufv_version=False)
+
 # Use HTTPS and skip cert verification
 uva = UnifiVideoAPI(api_key='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', addr='10.3.2.1',
   port=7443, schema='https', verify_cert=False)
