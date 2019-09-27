@@ -58,10 +58,13 @@ class APITests(unittest.TestCase):
             or API key
           - throw UnifiVideoVersionError when check_ufv_version == True
             and GET bootstrap response has an unknown version string
+          - throw UnifiVideoVersionError when check_ufv_version == True
+            and GET bootstrap response has an out of range version
         """
 
         self.assertRaises(ValueError, UnifiVideoAPI)
 
+        # Invalid version
         res_w_unk_ufv_ver = json.loads(responses['bootstrap'])
         res_w_unk_ufv_ver['data'][0]['systemInfo']['version'] = 'qwerty'
 
@@ -71,14 +74,38 @@ class APITests(unittest.TestCase):
         self.assertRaises(UnifiVideoVersionError, UnifiVideoAPI,
             api_key='xxxxxx')
 
+        # Version Lower than range
+        res_w_low_ufv_ver = json.loads(responses['bootstrap'])
+        res_w_low_ufv_ver['data'][0]['systemInfo']['version'] = '0.0.1'
+
+        mocked_urlopen.side_effect = mocked_response(json.dumps(
+            res_w_low_ufv_ver).encode('utf8'), set_cookies=True)
+
+        self.assertRaises(UnifiVideoVersionError, UnifiVideoAPI,
+            api_key='xxxxxx')
+
+        # Version Higher than range
+        res_w_high_ufv_ver = json.loads(responses['bootstrap'])
+        res_w_high_ufv_ver['data'][0]['systemInfo']['version'] = '99999.0.0'
+
+        mocked_urlopen.side_effect = mocked_response(json.dumps(
+            res_w_high_ufv_ver).encode('utf8'), set_cookies=True)
+
+        self.assertRaises(UnifiVideoVersionError, UnifiVideoAPI,
+            api_key='xxxxxx')
+
+        # Version in ok range
+        res_w_ok_ufv_ver = json.loads(responses['bootstrap'])
+        res_w_ok_ufv_ver['data'][0]['systemInfo']['version'] = '3.10.6'
+
+
         mocked_urlopen.side_effect = mocked_response(arg_pile=[
             {'data': responses['recordings']},
             {'data': responses['camera']},
-            {'data': json.dumps(res_w_unk_ufv_ver).encode('utf8')},
+            {'data': json.dumps(res_w_ok_ufv_ver).encode('utf8')},
         ])
 
-        self.assertIsInstance(UnifiVideoAPI(api_key='xxxxx',
-            check_ufv_version=False), UnifiVideoAPI)
+        self.assertIsInstance(UnifiVideoAPI(api_key='xxxxx'), UnifiVideoAPI)
 
 if __name__ == '__main__':
     unittest.main()

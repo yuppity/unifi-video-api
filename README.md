@@ -4,7 +4,7 @@
 
 Python API for interfacing with UniFi Video.
 
-**Supported UniFi Video versions**: v3.9.12.
+**Supported UniFi Video versions**: v3.9.12 to v3.10.6
 
 **Supported Ubiquiti camera models**: UVC, UVC G3, UVC G3 Dome, UVC Dome, UVC Pro, UVC G3 Pro,
 UVC G3 Flex, UVC Micro, UVC G3 Micro, airCam, airCam Dome, and airCam Mini.
@@ -117,8 +117,8 @@ uva.recordings['xxxxxxxxxxxxxxxxxxxx'].download('recording01.mp4')
 
 
 ## Warning
-This software has been tested against UniFi Video v3.9.12 and a single UVC G3
-camera. While unlikely, should any of the POST payloads result in software or
+This software has been tested against a limited set of API versions and hardware.
+While unlikely, should any of the POST payloads result in software or
 hardware failure, the maintainer of this package is not liable.
 
 Proceed at your own risk.
