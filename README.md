@@ -94,7 +94,7 @@ uva.get_camera('Garage').ir_leds('auto')
 # Turn off IR leds (manual mode implied)
 uva.get_camera('Garage').ir_leds('off')
 
-# Turn of IR leds (manual mode implied)
+# Turn on IR leds (manual mode implied)
 uva.get_camera('Garage').ir_leds('on')
 
 # Set camera to record at all times and to pre capture 5 secs
