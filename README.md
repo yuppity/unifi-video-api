@@ -36,15 +36,15 @@ UVC G3 Flex, UVC Micro, UVC G3 Micro, airCam, airCam Dome, and airCam Mini.
 * Snapshot (thumbnail) download
 
 ## Installation
-In your project directory:
+
+Either grab it from PyPI
 
 ```
-git clone https://github.com/yuppity/unifi-video-api && \
-  ln -s unifi-video-api/unifi_video .
+pip install unifi-video
 ```
 
-Alternatively, place the [unifi_video](unifi_video) folder somewhere in your filesystem and
-include the path in `$PYTHONPATH`.
+or download a release and manually place [unifi_video](unifi_video) in your project
+directory, or any path in `$PYTHONPATH`.
 
 You shouldn't need any external libraries, unless you want to run the tests or
 build the docs (see [requirements_dev.txt](requirements_dev.txt)).
