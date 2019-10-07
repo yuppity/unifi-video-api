@@ -14,9 +14,9 @@ build_dist() {
 
 upload() {
   if [ ! -z $1 ]; then
-    python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*.tar.gz
+    python3 -m twine upload --repository-url https://test.pypi.org/legacy/ "${DIST_DIR}"/*.tar.gz
   else 
-    python3 -m twine upload dist/*.tar.gz
+    python3 -m twine upload "${DIST_DIR}"/*.tar.gz
   fi
 }
 
