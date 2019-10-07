@@ -1,4 +1,9 @@
 try:
+    ModuleNotFoundError
+except NameError:
+    ModuleNotFoundError = ImportError
+
+try:
     from six import itervalues
 except (ImportError, ModuleNotFoundError):
     from ._six import itervalues
