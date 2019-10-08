@@ -10,7 +10,8 @@ from . import utils
 endpoints = {
     'save': lambda x: 'camera/{}'.format(x),
     'data': lambda x: 'camera/{}'.format(x),
-    'snapshot': lambda x: 'snapshot/camera/{}?force=true'.format(x),
+    'snapshot': lambda c, w: 'snapshot/camera/{}?force=true{}'.format(
+        c, '&width={}'.format(w) if w else ''),
     'recording_span': lambda x, s, e: 'video/camera?' \
         'startTime={}&endTime={}&cameras[]={}'.format(s, e, x)
 }
@@ -229,14 +230,17 @@ class UnifiVideoCamera(UnifiVideoSingle):
             self._load_data(self._extract_data(
                 self._api.get(endpoints['data'](self._id))))
 
-    def snapshot(self, filename=None):
+    def snapshot(self, filename=None, width=0):
         """Take and download snapshot.
 
-        :param filename: Filename to save the snapshot to. Optional.
+        :param filename: Filename to save the snapshot to
         :type filename: str or None
+        :param width: Image width in pixels
+        :type width: int
         """
 
-        return self._api.get(endpoints['snapshot'](self._id),
+        return self._api.get(
+            endpoints['snapshot'](self._id, int(width)),
             filename if filename else 'snapshot-{}-{}.jpg'.format(
                 self._id, int(time.time())))
 
