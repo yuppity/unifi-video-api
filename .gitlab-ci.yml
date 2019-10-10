@@ -1,5 +1,10 @@
 test:
   script:
-  # - apt-get install -y python-dev python-pip
-  - pip install -r requirements_dev.txt
-  - python tests
+  - python2 -m virtualenv --no-site-packages py2env
+  - py2env/bin/python tests/imports.py
+  - py2env/bin/pip install -r requirements_dev.txt
+  - py2env/bin/python tests
+  - python3 -m venv py3env
+  - py3env/bin/python tests/imports.py
+  - py3env/bin/pip install -r requirements_dev.txt
+  - py3env/bin/python tests
