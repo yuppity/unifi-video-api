@@ -43,6 +43,41 @@ class UnifiVideoVersionError(ValueError):
 
 class UnifiVideoAPI(object):
     """Encapsulates a single UniFi Video server.
+
+    Arguments:
+        api_key (str): UniFi Video API key
+        username (str): UniFi Video account username
+        password (str): UniFi Video account pasword
+        addr (str): UniFi Video host address
+        port (int): UniFi Video host port
+        schema (str): Protocol schema to use. Valid values: `http`, `https`
+        verify_cert (bool): Whether to verify UniFi Video's TLS cert when
+            connecting over HTTPS
+        check_ufv_version (bool): Set to ``False`` to use with untested
+            UniFi Video versions
+
+    Note:
+
+        At minimum, you have to
+
+        - provide either an API key or a username:password pair
+        - set the host address and port to wherever your UniFi Video
+          is listening at
+
+    Attributes:
+        _data (dict): UniFi Video "bootstrap" JSON as a dict
+        base_url (str): API base URL
+        api_key (str or NoneType): API key (from input params)
+        username (str or NoneType): Username (from input params)
+        password (str or NoneType): Password (from input params)
+        jsession_av (str or NoneType): UniFi Video session ID
+
+        cameras (:class:`~unifi_video.collections.UnifiVideoCollection`):
+            Collection of :class:`~unifi_video.camera.UnifiVideoCamera` objects
+
+        recordings (:class:`~unifi_video.collections.UnifiVideoCollection`):
+            Collection of :class:`~unifi_video.recording.UnifiVideoRecording`
+            objects
     """
 
     _supported_ufv_versions = []
@@ -179,11 +214,27 @@ class UnifiVideoAPI(object):
     def get(self, url, raw=False):
         """Send GET request.
 
-        :param str url: API endpoint URL
-        :param raw: Set `str` filename if you want to save the response to a file.
-            Set to `True` if you want the to return raw response data.
-        :type raw: bool or str
+        Arguments:
+            url (str): API endpoint (relative to the API base URL)
+            raw (str or bool): Set `str` filename if you want to save the
+                response to a file.  Set to ``True``  if you want the to
+                return raw response data.
+
+        Returns:
+            Response JSON (as `dict`) when `Content-Type` response header is
+            `application/json`
+
+            ``True`` if ``raw`` is `str` (filename) and a file was
+            successfully written to
+
+            Raw response body (as `bytes`) if the `raw` input param is of type
+            `bool`
+
+            ``False`` on HTTP 4xx - 5xx
+
+        :rtype: NoneType, bool, dict, bytes
         """
+
         req = self._build_req(url)
         try:
             res = self._urlopen(req)
@@ -197,19 +248,22 @@ class UnifiVideoAPI(object):
     def post(self, url, data=None, raw=False, method=None):
         """Send POST request.
 
-        :param str url: API endpoint URL
-        :param data: Post data
-        :type data: dict or NoneType
-        :param raw: Set `str` filename if you want to save the response to a file.
-            Alternatively, set to `True` if you want the raw response as
-            return value.
-        :type raw: bool or str
+        Args:
+            url (str): API endpoint (relative to the API base URL)
+            data (dict or NoneType): Request body
+            raw (str or bool): Filename (`str`) if you want the response
+                saved to a file, ``True`` (`bool`) if you want the response
+                body as return value
 
-        Note:
-            - ``url`` will be appended to the API base URL
-            - Return value will be a ``dict`` if server responds
-                with ``Content-Type: application/json``, regardless of
-                of the ``raw`` param.
+        Return value:
+            Return value will depend on input parameters and server response:
+
+            - Parsed JSON response (`dict`) if server response headers use
+              ``Content-Type: application/json`` (even if the ``raw``
+              param is `True`)
+
+            - Raw response body in `str` (py2) or `bytes` (py3) if the ``raw``
+              param is set to ``True``
         """
 
         if data:
@@ -226,13 +280,21 @@ class UnifiVideoAPI(object):
             return False
 
     def put(self, url, data=None, raw=False):
-        """Send PUT request. See :func:`~unifi_video.UnifiVideoAPI.post`.
+        """Send PUT request.
+
+        Thin wrapper around :func:`~unifi_video.api.post`; the
+        same parameter/return semantics apply here.
         """
+
         return self.post(url, data, raw, 'PUT')
 
     def delete(self, url, data=None, raw=False):
-        """Send DELETE request. See :func:`~unifi_video.UnifiVideoAPI.post`.
+        """Send DELETE request.
+
+        Thin wrapper around :func:`~unifi_video.api.post`; the
+        same parameter/return semantics apply here.
         """
+
         return self.post(url, data, raw, 'DELETE')
 
     def login(self):
@@ -249,29 +311,34 @@ class UnifiVideoAPI(object):
     def refresh_cameras(self):
         """GET cameras from the server and update ``self.cameras``.
         """
+
         cameras = self.get(endpoints['cameras'])
         if isinstance(cameras, dict):
             for camera in cameras.get('data', []):
                 self.cameras.add(UnifiVideoCamera(self, camera))
 
     def refresh_recordings(self, limit=300):
-        """GET recordings from the server and update local ``self.recordings``.
+        """GET recordings from the server and update ``self.recordings``.
 
         :param int limit: Limit the number of recording items
             to fetch (``0`` for no limit).
         """
+
         recordings = self.get(endpoints['recordings'](limit))
         if isinstance(recordings, dict):
             for recording in recordings.get('data', []):
                 self.recordings.add(UnifiVideoRecording(self, recording))
 
     def get_camera(self, search_term):
-        """Get a camera whose ``name``, ``_id``, or ``overlay_text``
-        matches ``search_term``.
+        """Get a camera whose :attr:`~unifi_video.UnifiVideoCamera.name`,
+        :attr:`~unifi_video.UnifiVideoCamera._id`, or
+        :attr:`~unifi_video.UnifiVideoCamera.overlay_text` matches `search_term`.
 
-        :return: Camera (if found).
-        :rtype: :class:`~unifi_video.camera.UnifiVideoCamera` or `NoneType`
+        Returns:
+            :class:`~unifi_video.camera.UnifiVideoCamera` or `NoneType`
+            depending on whether or not `search_term` was matched to a camera.
         """
+
         search_term = search_term.lower()
         for camera in self.cameras:
             if camera._id == search_term or \

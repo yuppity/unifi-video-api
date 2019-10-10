@@ -135,17 +135,15 @@ def add_actionable(actionable):
     fn.__name__ = str(name)
     fn.__doc__ =  """Control image {}
 
-    :param value: New {} value
-    :type value: int or None
+    Args:
+        value (int or NoneType): New {} value
 
-    :return: If value provided: `True` or `False`, depending on
-        whether new value was registered. If no value provided: current
-        {} value.
-
-    :rtype: `bool` or `int`
+    Returns:
+        bool or int: ``True`` or ``False``, depending on whether new value
+        value was successfully registered. Current {} value when
+        called without input value.
 
     """.format(name, name, name)
-
 
     setattr(UnifiVideoCamera, name, isp_actionable(floor, ceiling)(fn))
 
@@ -161,22 +159,16 @@ class UnifiVideoCamera(UnifiVideoSingle):
     """Represents a single camera connected to a UniFi Video server
     (:class:`~unifi_video.api.UnifiVideoAPI`).
 
-    :ivar name: Camera name
-    :vartype name: str or None
-
-    :ivar model: Camera model
-    :vartype model: str or None
-
-    :ivar platform: Firmware platform
-    :vartype platform: str or None
-
-    :ivar str overlay_text: Custom text overlayed over the image
-    :ivar str mac_addr: Camera's MAC address
-    :ivar str _id: Camera's ID on the UniFi Video server it is attached to
-    :ivar dict _data: Complete copy of what the UniFi Video server knows
-        about the camera
-    :ivar list _isp_actionables: List of supported image settings
-    :ivar int utc_h_offset: UTC offset in hours
+    Attributes:
+        _id (str): Camera ID (MongoDB ObjectID as hex string)
+        name (str or NoneType): Camera name
+        model (str or NoneType): Camera model
+        platform (str or NoneType): Firmware platform
+        overlay_text (str): Custom text overlayd over the image
+        mac_addr (str): Camera MAC address
+        utc_h_offset (int): UTC offset in hours
+        _data (dict): Complete camera JSON from UniFi Video server
+        _isp_actionables (list): List of supported image settings
     """
 
     def _load_data(self, data):
@@ -431,6 +423,6 @@ class UnifiVideoCamera(UnifiVideoSingle):
 # are controlled with methods defined in UnifiVideoCamera body.
 #
 # Note: "isp actionables" is what the Ubiquiti provided frontend JS refers
-# to contrast, brightness, saturateion, etc. as.
+# to contrast, brightness, saturation, etc. as.
 for actionable in common_isp_actionables:
     add_actionable(actionable)
