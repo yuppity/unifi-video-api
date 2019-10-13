@@ -1,6 +1,7 @@
 # unifi-video-api
 
 [![Build Status](https://travis-ci.org/yuppity/unifi-video-api.svg?branch=master)](https://travis-ci.org/yuppity/unifi-video-api)
+[![Documentation Status](https://readthedocs.org/projects/unifi-video-api/badge/?version=latest)](https://unifi-video-api.readthedocs.io/en/latest/?badge=latest)
 
 Python API for interfacing with UniFi Video.
 
@@ -55,6 +56,9 @@ system level packages.
 Both python 2.7+ and python3 are supported.
 
 ## Usage
+
+See the [docs](https://unifi-video-api.readthedocs.io/) for an API reference.
+
 ```python
 from unifi_video import UnifiVideoAPI
 
