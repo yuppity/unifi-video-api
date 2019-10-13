@@ -245,7 +245,7 @@ class UnifiVideoAPI(object):
                 return self._handle_http_401(url, raw)
             return False
 
-    def post(self, url, data=None, raw=False, method=None):
+    def post(self, url, data=None, raw=False, _method=None):
         """Send POST request.
 
         Args:
@@ -255,21 +255,15 @@ class UnifiVideoAPI(object):
                 saved to a file, ``True`` (`bool`) if you want the response
                 body as return value
 
-        Return value:
-            Return value will depend on input parameters and server response:
+        Returns:
+            See :func:`~unifi_video.api.get`.
 
-            - Parsed JSON response (`dict`) if server response headers use
-              ``Content-Type: application/json`` (even if the ``raw``
-              param is `True`)
-
-            - Raw response body in `str` (py2) or `bytes` (py3) if the ``raw``
-              param is set to ``True``
         """
 
         if data:
-            req = self._build_req(url, data, method)
+            req = self._build_req(url, data, _method)
         else:
-            req = self._build_req(url, method=method)
+            req = self._build_req(url, method=_method)
         try:
             res = self._urlopen(req)
             self._parse_cookies(res)
