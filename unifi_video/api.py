@@ -81,7 +81,7 @@ class UnifiVideoAPI(object):
     """
 
     _supported_ufv_versions = []
-    _supported_ufv_version_ranges = [['3.9.12','3.10.6']]
+    _supported_ufv_version_ranges = [['3.9.12','3.10.10']]
 
     def __init__(self, api_key=None, username=None, password=None,
             addr='localhost', port=7080, schema='http', verify_cert=True,
