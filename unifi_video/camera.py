@@ -111,7 +111,7 @@ def isp_actionable(floor=0, ceiling=100, name=None):
             if fn_name not in camera._isp_actionables:
                 raise CameraModelError('This camera model ({}) has no ' \
                     'support for {} control'.format(camera.model, fn_name))
-            if val == None:
+            if val is None:
                 return fn(camera)
             if val > ceiling:
                 val = ceiling
@@ -125,7 +125,7 @@ def add_actionable(actionable):
     name, floor, ceiling = actionable
     def fn(self, value=None):
         isp = self._data['ispSettings']
-        if value == None:
+        if value is None:
             return isp.get(name, -1)
         isp[name] = value
         self.update(True)
@@ -196,7 +196,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
 
     def _simple_isp_actionable(self, setting_name, value):
         isp = self._data['ispSettings']
-        if value == None:
+        if value is None:
             return isp.get(setting_name, -1)
         isp[setting_name] = value
         self.update(True)
@@ -406,10 +406,10 @@ class UnifiVideoCamera(UnifiVideoSingle):
                 raise ValueError('Unknow recording mode "{}"'.format(
                     recording_mode))
 
-        if pre_padding_secs != None:
+        if pre_padding_secs is not None:
             rec_settings['prePaddingSecs'] = pre_padding_secs
 
-        if post_padding_secs != None:
+        if post_padding_secs is not None:
             rec_settings['postPaddingSecs'] = post_padding_secs
 
         verify = deepcopy(rec_settings)
