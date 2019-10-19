@@ -123,6 +123,7 @@ def isp_actionable(floor=0, ceiling=100, name=None):
 
 def add_actionable(actionable):
     name, floor, ceiling = actionable
+
     def fn(self, value=None):
         isp = self._data['ispSettings']
         if value is None:
@@ -134,7 +135,7 @@ def add_actionable(actionable):
         else:
             return False
     fn.__name__ = str(name)
-    fn.__doc__ =  """Control image {}
+    fn.__doc__ = """Control image {}
 
     Args:
         value (int or NoneType): New {} value
