@@ -417,6 +417,27 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self.update(True)
         return verify == self._data['recordingSettings']
 
+    def get_recording_settings(self, all=False):
+        """Get camera's recording settings
+
+        Arguments:
+            all (bool): Whether to show all available settings. The default
+                is to only show the settings that are controllable by calling
+                :func:`~unifi_video.camera.UnifiVideoCamera.set_recording_settings`.
+        """
+
+        controllable = [
+            'motionRecordEnabled',
+            'fullTimeRecordEnabled',
+            'prePaddingSecs',
+            'postPaddingSecs',
+        ]
+
+        all_settings = self._data.get('recordingSettings', {})
+
+        return {k: all_settings.get(k, None) for k in controllable} \
+            if not all else all_settings
+
     def __str__(self):
         _filter = ['name', 'model', 'platform']
         return '{}: {}'.format(
