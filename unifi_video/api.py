@@ -70,6 +70,8 @@ class UnifiVideoAPI(object):
         api_key (str or NoneType): API key (from input params)
         username (str or NoneType): Username (from input params)
         password (str or NoneType): Password (from input params)
+        name (str or NoneType): UniFi Video server name
+        version (str or NoneType): UniFi Video version
         jsession_av (str or NoneType): UniFi Video session ID
 
         cameras (:class:`~unifi_video.collections.UnifiVideoCollection`):
@@ -114,15 +116,15 @@ class UnifiVideoAPI(object):
         if not isinstance(data, dict):
             raise ValueError('Server responded with unknown bootstrap data')
         self._data = data.get('data', [{}])
-        self._name = self._data[0].get('nvrName', None)
-        self._version = self._data[0].get('systemInfo', {}).get('version', None)
+        self.name = self._data[0].get('nvrName', None)
+        self.version = self._data[0].get('systemInfo', {}).get('version', None)
 
         self._is_supported = False
 
-        if self._version in UnifiVideoAPI._supported_ufv_versions:
+        if self.version in UnifiVideoAPI._supported_ufv_versions:
             self._is_supported = True
         else:
-            v_actual = LooseVersion(self._version)
+            v_actual = LooseVersion(self.version)
             for curr_version in UnifiVideoAPI._supported_ufv_version_ranges:
                 v_low = LooseVersion(curr_version[0])
                 v_high = LooseVersion(curr_version[1])
@@ -342,8 +344,8 @@ class UnifiVideoAPI(object):
 
     def __str__(self):
         return '{}: {}'.format(type(self).__name__, {
-            'name': self._name,
-            'version': self._version,
+            'name': self.name,
+            'version': self.version,
             'supported_version': self._is_supported
         })
 
