@@ -177,7 +177,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
 
         self.model = data.get('model', None)
 
-        if not self.model or not models.get(self.model, None):
+        if not self.model or self.model not in models:
             raise CameraModelError
 
         self._data = data
