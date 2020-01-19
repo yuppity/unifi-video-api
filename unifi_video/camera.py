@@ -190,7 +190,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
             self.model)
 
         try:
-            self.utc_h_offset = int(data.get('deviceSettings', {})\
+            self.utc_h_offset = int((data.get('deviceSettings') or {})\
                 .get('timezone', '').split('GMT').pop())
         except (TypeError, ValueError):
             self.utc_h_offset = 0
