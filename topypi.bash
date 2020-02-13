@@ -31,6 +31,10 @@ case $1 in
     clean && build_dist
     ;;
 
+  clean)
+    clean
+    ;;
+
   *)
     clean && build_dist && upload
     clean
