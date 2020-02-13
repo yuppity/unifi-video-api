@@ -1,2 +1,4 @@
 *.pyc
 docs/_build
+py3env/
+py2env/
