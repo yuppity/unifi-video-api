@@ -4,6 +4,11 @@ PKG_NAME="$(sed -n 's/.*pypi_package_name *= *["'"'"']\(.*\)["'"'"'].*/\1/p' set
 DIST_DIR=_dist_"${PKG_NAME}"
 
 clean() {
+  (
+    shopt -s globstar
+    rm -r **/__pycache__/
+    rm **/*.pyc
+  )
   rm -rfv "${DIST_DIR}"
   rm -rfv "${PKG_NAME}"*.egg-info
 }

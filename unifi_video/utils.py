@@ -8,7 +8,7 @@ def camel_to_snake(text):
 def get_arguments():
     from inspect import getargvalues, stack
     return {k: v for k, v in getargvalues(stack()[1][0])[-1:][0].items() \
-            if k is not 'self'}
+            if k != 'self'}
 
 def iso_str_to_epoch(iso_str):
     try:
