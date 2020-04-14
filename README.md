@@ -5,7 +5,7 @@
 
 Python API for interfacing with UniFi Video.
 
-**Supported UniFi Video versions**: v3.9.12 to v3.10.10
+**Supported UniFi Video versions**: v3.9.12 to v3.10.11
 
 **Supported Ubiquiti camera models**: UVC, UVC G3, UVC G3 Dome, UVC Dome, UVC Pro, UVC G3 Pro,
 UVC G3 Flex, UVC Micro, UVC G3 Micro, airCam, airCam Dome, and airCam Mini, UVC G4 Bullet, UVC G4 Pro.
