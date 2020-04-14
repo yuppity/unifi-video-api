@@ -22,13 +22,14 @@ models = {
     'UVC G3': {
         'features': [
             'external_accessory'
-        ]
+        ],
     },
 
     'UVC G3 Dome': {
         'features': [
-            'can_play_sound', 'toggable_led'
-        ]
+            'can_play_sound',
+            'toggable_led',
+        ],
     },
 
     'UVC Dome': {},
@@ -36,39 +37,43 @@ models = {
     'UVC Pro': {
         'pro': True,
         'features': [
-            'optical_zoom'
-        ]
+            'optical_zoom',
+        ],
     },
 
     'UVC G3 Pro': {
         'pro': True,
         'features': [
-            'optical_zoom'
-        ]
+            'optical_zoom',
+        ],
     },
 
     'UVC G3 Flex': {
         'features': [
-            'can_play_sound', 'toggable_led'
-        ]
+            'can_play_sound',
+            'toggable_led',
+        ],
     },
 
     'UVC Micro': {
         'features': [
-            'can_play_sound', 'toggable_led'
-        ]
+            'can_play_sound',
+            'toggable_led',
+        ],
     },
 
     'UVC G3 Micro': {
         'features': [
-            'can_play_sound', 'toggable_led'
-        ]
+            'can_play_sound',
+            'toggable_led',
+        ],
     },
 
     'Vision Pro': {
         'features': [
-            'can_play_sound', 'toggable_led'
-        ]
+            'can_play_sound',
+            'toggable_led',
+        ],
     },
 
     'airCam': {},
