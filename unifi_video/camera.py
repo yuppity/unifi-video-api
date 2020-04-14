@@ -16,6 +16,14 @@ endpoints = {
         'startTime={}&endTime={}&cameras[]={}'.format(s, e, x)
 }
 
+# Supported camera models, checked during UnifiVideoCamera initialization.
+#
+# Some model specifications include list of supported features. These are
+# not currently checked against and are included only to account for
+# some potential future use.
+#
+# The structure is constructed from bits gleaned from the frontend JS
+# served by UniFi Video.
 models = {
     'UVC': {},
 
