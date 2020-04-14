@@ -81,6 +81,18 @@ models = {
     'airCam Dome': {},
 
     'airCam Mini': {},
+
+    'UVC G4 Bullet': {
+        'features': [
+        ],
+    },
+
+    'UVC G4 Pro': {
+        'features': [
+            'toggable_led',
+            'optical_zoom',
+        ],
+    },
 }
 
 common_isp_actionables = [
