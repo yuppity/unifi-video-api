@@ -9,6 +9,7 @@ endpoints = {
     'snapshot': lambda c, d, r, w: \
         'snapshot/recording/{}/{}/{}?width={}'.format(c,
             d.strftime('%Y/%m/%d'), r, w),
+    'motion': lambda x: 'recording/{}/motion?alpha=true'.format(x),
 }
 
 class UnifiVideoRecording(UnifiVideoSingle):
@@ -63,6 +64,27 @@ class UnifiVideoRecording(UnifiVideoSingle):
         return self._api.get(endpoints['download'](self._id),
             filename if filename else 'recording-{}-{}.mp4'.format(
                 self._id, self.start_time.isoformat()))
+
+    def motion( self, filename=None):
+        """Download recording motion
+
+        Arguments:
+            filename (str, NoneType, bool): Filename (`str`) to save the
+                image as or ``True`` (`bool`) if you want the response body
+                as a return value. You can also leave this out or set it to
+                ``None`` or ``False`` and a filename will be generated for you.
+
+        Return value:
+            Depends on input params.
+
+            - When ``filename`` is `str`, `NoneType` or ``False``: `True` if
+              write to file was successful, otherwise `NoneType`
+
+            - When ``filename`` is ``True``: raw response body (`str`)
+        """
+
+        return self._api.get(endpoints['motion'](self._id),
+            filename if filename else 'motion-{}.png'.format(self._id))
 
     def snapshot(self, width=600, filename=None):
         """Download recording thumbnail
