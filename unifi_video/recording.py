@@ -83,6 +83,9 @@ class UnifiVideoRecording(UnifiVideoSingle):
             - When ``filename`` is ``True``: raw response body (`str`)
         """
 
+        if self.rec_type == 'fullTimeRecording':
+            return False
+
         return self._api.get(endpoints['motion'](self._id),
             filename if filename else 'motion-{}.png'.format(self._id))
 
