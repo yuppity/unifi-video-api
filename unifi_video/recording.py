@@ -65,7 +65,7 @@ class UnifiVideoRecording(UnifiVideoSingle):
             filename if filename else 'recording-{}-{}.mp4'.format(
                 self._id, self.start_time.isoformat()))
 
-    def motion( self, filename=None):
+    def motion(self, filename=None):
         """Download recording motion
 
         Arguments:
