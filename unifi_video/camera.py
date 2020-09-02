@@ -161,17 +161,18 @@ def add_actionable(actionable):
         else:
             return False
     fn.__name__ = str(name)
-    fn.__doc__ = """Control image {}
+    fn.__doc__ = """Control image {name}
 
     Args:
-        value (int or NoneType): New {} value
+        value (int or NoneType): New {name} value
+            (min: ``{floor}``, max: ``{ceiling}``)
 
     Returns:
         bool or int: ``True`` or ``False``, depending on whether new value
-        value was successfully registered. Current {} value when
+        value was successfully registered. Current {name} value when
         called without input value.
 
-    """.format(name, name, name)
+    """.format(name=name, floor=floor, ceiling=ceiling)
 
     setattr(UnifiVideoCamera, name, isp_actionable(floor, ceiling)(fn))
 
