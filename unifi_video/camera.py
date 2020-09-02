@@ -99,6 +99,7 @@ models = {
         'features': [
             'toggable_led',
             'optical_zoom',
+            'animate_led_on_motion',
         ],
     },
 }
