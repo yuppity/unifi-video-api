@@ -10,7 +10,7 @@ clean() {
     rm **/*.pyc
   )
   rm -rfv "${DIST_DIR}"
-  rm -rfv "${PKG_NAME}"*.egg-info
+  rm -rfv "${PKG_NAME//-/_}".egg-info
 }
 
 build_dist() {
