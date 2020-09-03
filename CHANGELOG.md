@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 0.1.8 (2020-09-03)
+
+### Added
+* `UnifiVideoRecording.motion()` to download recording's motion image
+
+### Changed
+* Supported versions range (to cover UniFi Video v3.10.13)
+* Documentation changes
+
+### Fixed
+* Names in the deployment script
+
 ## 0.1.7 (2020-04-14)
 
 ### Added
