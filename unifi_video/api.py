@@ -28,8 +28,12 @@ endpoints = {
     'login': 'login',
     'cameras': 'camera',
     'recordings': lambda x: 'recording?idsOnly=false&' \
-        'sortBy=startTime&sort=desc&limit={}'.format(x),
+        'sortBy=startTime&sort=desc&limit={}'.format(x) \
+        if x is not None else 'recording',
+    'recording': lambda x: 'recording/{}'.format(
+        x._id if isinstance(x, UnifiVideoRecording) else x),
     'bootstrap': 'bootstrap',
+
 }
 
 class UnifiVideoVersionError(ValueError):
@@ -215,14 +219,18 @@ class UnifiVideoAPI(object):
         elif self.login():
             return self.get(url, raw)
 
-    def get(self, url, raw=False):
+    def get(self, url, raw=False, url_params={}):
         """Send GET request.
 
         Arguments:
-            url (str): API endpoint (relative to the API base URL)
-            raw (str or bool): Set `str` filename if you want to save the
-                response to a file.  Set to ``True``  if you want the to
-                return raw response data.
+            url (str):
+                API endpoint (relative to the API base URL)
+            raw (str or bool, optional):
+                Set `str` filename if you want to save the response to a file.
+                Set to ``True``  if you want the to return raw response data.
+            url_params (dict, optional):
+                URL parameters as a dict. Gets turned into query string and
+                appended to ``url``
 
         Returns:
             Response JSON (as `dict`) when `Content-Type` response header is
@@ -238,6 +246,10 @@ class UnifiVideoAPI(object):
 
         :rtype: NoneType, bool, dict, bytes
         """
+
+        if url_params:
+            url = '{}?{}'.format(
+                url, UnifiVideoAPI.params_to_query_str(url_params))
 
         req = self._build_req(url)
         try:
@@ -322,10 +334,9 @@ class UnifiVideoAPI(object):
             to fetch (``0`` for no limit).
         """
 
-        recordings = self.get(endpoints['recordings'](limit))
-        if isinstance(recordings, dict):
-            for recording in recordings.get('data', []):
-                self.recordings.add(UnifiVideoRecording(self, recording))
+        for recording in self.get_recordings(
+                rec_type='all', order='desc', limit=limit):
+            self.recordings.add(recording)
 
     def get_camera(self, search_term):
         """Get a camera whose :attr:`~unifi_video.UnifiVideoCamera.name`,
@@ -344,6 +355,71 @@ class UnifiVideoAPI(object):
                     camera.overlay_text.lower() == search_term:
                 return camera
 
+    def get_recordings(self, rec_type='all', camera=None, order='desc',
+            limit=0, req_each=False):
+        '''Fetch recording listing
+
+        Args:
+            rec_type (str, optional):
+                Type of recordings to fetch: *all*, *motion* or *fulltime*
+
+            camera (:class:`~unifi_video.camera.UnifiVideoCamera` or str or \
+                    list of :class:`~unifi_video.camera.UnifiVideoCamera` or \
+                    list of str):
+                Camera or cameras whose recordings to fetch
+
+            order (str, optional):
+                Sort order: *desc* or *asc*. Recordings are sorted by their
+                start time.
+
+            limit (int, optional):
+                Limit the number of recordings
+
+            req_each (bool, optional):
+                Whether to save bandwidth on the initial request and to fetch
+                each recordings' details individually or to ask for each
+                recordings' details to be included in the one and only initial
+                request. ``True`` can potentially save you in total bytes
+                transferred but will cost you in the number of HTTP requests
+                made.
+
+        Returns:
+            Iterable[:class:`~unifi_video.recording.UnifiVideoRecording`]
+
+        '''
+
+        rec_types = {
+            'motion': ('motionRecording',),
+            'fulltime': ('fullTimeRecording',),
+            'all': ('motionRecording', 'fullTimeRecording'),
+        }
+
+        url_params = {
+            'sortBy': 'startTime',
+            'order': order,
+            'idsOnly': req_each,
+            'limit': limit if limit else None,
+            'cause': rec_types[rec_type],
+            'cameras': camera if isinstance(camera, (list, tuple)) else [camera],
+        }
+
+        if req_each:
+            return (
+                UnifiVideoRecording(
+                    self,
+                    self.get(endpoints['recording'](rec_id))['data'][0])
+                for rec_id in self.get(
+                    endpoints['recordings'](None),
+                    url_params=url_params)['data']
+            )
+        else:
+            return (
+                UnifiVideoRecording(self, rec)
+                for rec in self.get(
+                    endpoints['recordings'](None),
+                    url_params=url_params)['data']
+            )
+
     def __str__(self):
         return '{}: {}'.format(type(self).__name__, {
             'name': self.name,
@@ -351,5 +427,36 @@ class UnifiVideoAPI(object):
             'supported_version': self._is_supported
         })
 
+    @staticmethod
+    def params_to_query_str(params_dict):
+        '''Build query string from dict of URL parameters
+
+        Arguments:
+            params_dict (dict):
+                URL parameters
+
+        Returns:
+            str: Query string
+        '''
+
+        str_conversions = {
+            str: lambda x: x,
+            unicode: lambda x: x,
+            int: lambda x: '{}'.format(x),
+            float: lambda x: '{}'.format(x),
+            bool: lambda x: 'true' if x else 'false',
+            UnifiVideoCamera: lambda x: x._id,
+        }
+
+        params = []
+        for k, v in ((k, v) for k, v in params_dict.items() if v is not None):
+            if isinstance(v, (list, tuple)):
+                for lv in (x for x in v if x is not None):
+                    params.append('{}[]={}'.format(
+                        k, str_conversions[type(lv)](lv)))
+            else:
+                params.append('{}={}'.format(k, str_conversions[type(v)](v)))
+
+        return '&'.join(params)
 
 __all__ = ['UnifiVideoAPI']
