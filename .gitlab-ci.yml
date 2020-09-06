@@ -1,9 +1,14 @@
-test:
+run tests with py2.7:
+  image: python:2.7
   script:
-  - python2 -m virtualenv --no-site-packages py2env
-  - py2env/bin/python tests/imports.py
-  - py2env/bin/pip install -r requirements_dev.txt
-  - py2env/bin/python tests
+    - python2 -m virtualenv py2env
+    - py2env/bin/python tests/imports.py
+    - py2env/bin/pip install -r requirements_dev.txt
+    - py2env/bin/python tests
+
+run tests with py3.7:
+  image: python:3.7
+  script:
   - python3 -m venv py3env
   - py3env/bin/python tests/imports.py
   - py3env/bin/pip install -r requirements_dev.txt
