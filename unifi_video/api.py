@@ -114,6 +114,7 @@ class UnifiVideoAPI(object):
         self._load_data(self.get(endpoints['bootstrap']))
 
         self.cameras = UnifiVideoCollection(UnifiVideoCamera)
+        self.active_cameras = UnifiVideoCollection(UnifiVideoCamera)
         self.recordings = UnifiVideoCollection(UnifiVideoRecording)
         self.refresh_cameras()
         self.refresh_recordings()
@@ -319,13 +320,16 @@ class UnifiVideoAPI(object):
             return False
 
     def refresh_cameras(self):
-        """GET cameras from the server and update ``self.cameras``.
-        """
+        '''GET cameras from the server and update ``self.cameras``.
+        '''
 
         cameras = self.get(endpoints['cameras'])
         if isinstance(cameras, dict):
-            for camera in cameras.get('data', []):
-                self.cameras.add(UnifiVideoCamera(self, camera))
+            for camera_data in cameras.get('data', []):
+                camera = UnifiVideoCamera(self, camera_data)
+                self.cameras.add(camera)
+                if camera.managed and camera.connected:
+                    self.active_cameras.add(camera)
 
     def refresh_recordings(self, limit=300):
         """GET recordings from the server and update ``self.recordings``.
@@ -338,21 +342,35 @@ class UnifiVideoAPI(object):
                 rec_type='all', order='desc', limit=limit):
             self.recordings.add(recording)
 
-    def get_camera(self, search_term):
-        """Get a camera whose :attr:`~unifi_video.UnifiVideoCamera.name`,
-        :attr:`~unifi_video.UnifiVideoCamera._id`, or
-        :attr:`~unifi_video.UnifiVideoCamera.overlay_text` matches `search_term`.
+    def get_camera(self, search_term, managed_only=False):
+        '''Get camera by its ObjectID, name or overlay text
+
+        Arguments:
+            search_term (str):
+                String to test against
+                :attr:`~unifi_video.UnifiVideoCamera.name`,
+                :attr:`~unifi_video.UnifiVideoCamera._id`, and
+                :attr:`~unifi_video.UnifiVideoCamera.overlay_text`.
+
+            managed_only (bool):
+                Whether to search unmanaged cameras as well.
 
         Returns:
             :class:`~unifi_video.camera.UnifiVideoCamera` or `NoneType`
             depending on whether or not `search_term` was matched to a camera.
-        """
+
+        Tip:
+            Do not attempt to find an unmanaged camera by it's overlay text;
+            UniFi Video provides limited detail for unmanaged cameras.
+
+        '''
 
         search_term = search_term.lower()
         for camera in self.cameras:
-            if camera._id == search_term or \
+            is_match = camera._id == search_term or \
                     camera.name.lower() == search_term or \
-                    camera.overlay_text.lower() == search_term:
+                    camera.overlay_text.lower() == search_term
+            if is_match and (not managed_only or camera.managed):
                 return camera
 
     def get_recordings(self, rec_type='all', camera=None, order='desc',

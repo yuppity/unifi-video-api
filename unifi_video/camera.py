@@ -196,8 +196,21 @@ class UnifiVideoCamera(UnifiVideoSingle):
         overlay_text (str): Custom text overlayd over the image
         mac_addr (str): Camera MAC address
         utc_h_offset (int): UTC offset in hours
+        state (str): Camera state
+        managed (bool): Whether camera is managed by the UniFi Video
+            instance
+        provisioned (bool): Whether camera is provisioned
+        managed_by_others (bool): Whether camera is managed by some
+            other UniFi Video instance
+        disconnect_reason (str): Reason for most recent disconnect
+        connected (bool): Whether camera is connected (ie, not
+            disconnected or in process of rebooting or being upgraded)
         _data (dict): Complete camera JSON from UniFi Video server
         _isp_actionables (list): List of supported image settings
+
+    Warning:
+        Attributes having to do with camera state reflect the state
+        as it was during object instantiation.
     """
 
     def _load_data(self, data):
@@ -215,6 +228,12 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self.mac_addr = utils.format_mac_addr(data.get('mac', 'ffffffffffff'))
         self._isp_actionables = determine_img_actionables(self.platform,
             self.model)
+        self.state = data.get('state', '')
+        self.managed = data.get('managed', None)
+        self.provisioned = data.get('provisioned', None)
+        self.managed_by_others = data.get('managedByOthers', None)
+        self.disconnect_reason = data.get('disconnectReason', '')
+        self.connected = self.state == 'CONNECTED'
 
         try:
             self.utc_h_offset = int((data.get('deviceSettings') or {})\
