@@ -1,6 +1,7 @@
 from __future__ import print_function, unicode_literals
 from functools import wraps
 from copy import deepcopy
+from datetime import datetime
 
 import time
 
@@ -189,28 +190,59 @@ class UnifiVideoCamera(UnifiVideoSingle):
     (:class:`~unifi_video.api.UnifiVideoAPI`).
 
     Attributes:
-        _id (str): Camera ID (MongoDB ObjectID as hex string)
-        name (str or NoneType): Camera name
-        model (str or NoneType): Camera model
-        platform (str or NoneType): Firmware platform
-        overlay_text (str): Custom text overlayd over the image
-        mac_addr (str): Camera MAC address
-        utc_h_offset (int): UTC offset in hours
-        state (str): Camera state
-        managed (bool): Whether camera is managed by the UniFi Video
-            instance
-        provisioned (bool): Whether camera is provisioned
-        managed_by_others (bool): Whether camera is managed by some
-            other UniFi Video instance
-        disconnect_reason (str): Reason for most recent disconnect
-        connected (bool): Whether camera is connected (ie, not
-            disconnected or in process of rebooting or being upgraded)
-        _data (dict): Complete camera JSON from UniFi Video server
-        _isp_actionables (list): List of supported image settings
+        name (str or NoneType):
+            Camera name
+        model (str or NoneType):
+            Camera model
+        platform (str or NoneType):
+            Firmware platform
+        overlay_text (str):
+            Custom text overlayd over the image
+        mac_addr (str):
+            Camera MAC address
+        utc_h_offset (int):
+            UTC offset in hours
+        state (str):
+            Camera state
+        managed (bool):
+            Whether camera is managed by the UniFi Video instance
+        provisioned (bool):
+            Whether camera is provisioned
+        managed_by_others (bool):
+            Whether camera is managed by some other UniFi Video instance
+        disconnect_reason (str):
+            Reason for most recent disconnect
+        connected (bool):
+            Whether camera is connected (ie, not disconnected or in process of
+            rebooting or being upgraded)
+        last_recording_id (str):
+            MongoDB ObjectID of latest recording
+        last_recording_start_time (int):
+            Unix timestamp (in ms): start time of latest recording
+        last_seen (int):
+            Unix timestamp (in ms). Meaning depends on the value of
+            :attr:`UnifiVideoCamera.state`:
+
+                - *CONNECTED*: timestamp for when the camera came online
+                - *DISCONNECTED*: timestamp for when the camera went offline
+        last_seen_ndt (datetime or NoneType):
+            :attr:`UnifiVideoCamera.last_seen` as naive :class:`datetime` object
+        _id (str):
+            Camera ID (MongoDB ObjectID as hex string)
+        _data (dict):
+            Complete camera JSON from UniFi Video server
+        _isp_actionables (list):
+            List of supported image settings
 
     Warning:
         Attributes having to do with camera state reflect the state
         as it was during object instantiation.
+
+    Warning:
+        :attr:`UnifiVideoCamera.last_seen` changes were observed on
+        UniFi Video v3.10.13. No attempt has been made to verify
+        :attr:`UnifiVideoCamera.last_seen` acts the same way across
+        all supported UniFi Video versions.
     """
 
     def _load_data(self, data):
@@ -232,8 +264,14 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self.managed = data.get('managed', None)
         self.provisioned = data.get('provisioned', None)
         self.managed_by_others = data.get('managedByOthers', None)
-        self.disconnect_reason = data.get('disconnectReason', '')
+        self.disconnect_reason = data.get('disconnectReason') or ''
         self.connected = self.state == 'CONNECTED'
+        self.last_recording_id = data.get('lastRecordingId', '') or ''
+        self.last_recording_start_time = \
+            data.get('lastRecordingStartTime', 0) or 0
+        self.last_seen = data.get('lastSeen', 0)
+        self.last_seen_ndt = datetime.fromtimestamp(self.last_seen / 1000) \
+            if self.last_seen else None
 
         try:
             self.utc_h_offset = int((data.get('deviceSettings') or {})\
