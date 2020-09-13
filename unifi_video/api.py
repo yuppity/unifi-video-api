@@ -78,10 +78,16 @@ class UnifiVideoAPI(object):
         version (str or NoneType): UniFi Video version
         jsession_av (str or NoneType): UniFi Video session ID
 
-        cameras (:class:`~unifi_video.collections.UnifiVideoCollection`):
-            Collection of :class:`~unifi_video.camera.UnifiVideoCamera` objects
+        cameras (:class:`UnifiVideoCollection`):
+            Collection of :class:`~unifi_video.camera.UnifiVideoCamera`
+            objects. Includes all cameras that the associated UniFi Video
+            instance is aware of
 
-        recordings (:class:`~unifi_video.collections.UnifiVideoCollection`):
+        active_cameras (:class:`UnifiVideoCollection`):
+            Like :attr:`UnifiVideoAPI.cameras` but only includes cameras
+            that are both connected and managed by the UniFi Video instance.
+
+        recordings (:class:`UnifiVideoCollection`):
             Collection of :class:`~unifi_video.recording.UnifiVideoRecording`
             objects
     """
