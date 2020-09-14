@@ -5,6 +5,9 @@ run tests with py2.7:
     - py2env/bin/python tests/imports.py
     - py2env/bin/pip install -r requirements_dev.txt
     - py2env/bin/python tests
+    - TZ=Asia/Colombo py2env/bin/python tests
+    - TZ=Europe/Helsinki py2env/bin/python tests
+    - TZ=America/New_York py2env/bin/python tests
 
 run tests with py3.7:
   image: python:3.7
@@ -12,4 +15,6 @@ run tests with py3.7:
   - python3 -m venv py3env
   - py3env/bin/python tests/imports.py
   - py3env/bin/pip install -r requirements_dev.txt
-  - py3env/bin/python tests
+  - TZ=Asia/Colombo py3env/bin/python tests
+  - TZ=Europe/Helsinki py3env/bin/python tests
+  - TZ=America/New_York py3env/bin/python tests
