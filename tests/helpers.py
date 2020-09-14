@@ -9,6 +9,11 @@ try:
 except ModuleNotFoundError:
     from unittest.mock import Mock, patch, MagicMock
 
+empty_response = {
+    'data': [],
+    'meta': {},
+}
+
 def mocked_response(data=None, res_json=True, set_cookies=False, arg_pile=[]):
 
     def response(req):

@@ -1,0 +1,265 @@
+{
+  "data": [
+    {
+      "serviceState": "READY",
+      "cloudHost": "video.ubnt.com",
+      "nvrName": "test",
+      "isHardwareNvr": false,
+      "isLoggedIn": true,
+      "isFactoryDefault": false,
+      "user": {
+        "account": {
+          "name": "admin",
+          "email": null,
+          "username": "admin",
+          "language": "English",
+          "lastIp": "192.168.1.153",
+          "lastLogInTimestamp": 1599562318570,
+          "ssoId": null,
+          "inviteId": null,
+          "_id": "5f5762436f02900d34122f67"
+        },
+        "userGroup": {
+          "groupType": "SUPER_ADMIN",
+          "_id": "5f5762436f02900d34122f66"
+        },
+        "disabled": false,
+        "apiKey": "4hXhyuCTXnXalKl6jbk98K73nEjnvoqV",
+        "mobileKey": "zh5VxJxjp7BkoNHkja9CRZHk8UwCZ5rY",
+        "loginToken": null,
+        "enableApiAccess": true,
+        "enableLocalAccess": true,
+        "motionAlertSchedules": null,
+        "subscribedMotion": null,
+        "subscribedServerConnection": null,
+        "subscribedCameraConnection": null,
+        "adoptionKey": "VSjZMIlu",
+        "admin": true,
+        "superAdmin": true,
+        "_id": "5f5762436f02900d34122f68",
+        "enableEmail": true,
+        "enablePush": true,
+        "sysDisconnectEmailAlert": true,
+        "sysDisconnectPushAlert": true
+      },
+      "userGroups": [],
+      "alertSchedules": [],
+      "cameraSchedules": [],
+      "cameras": [],
+      "servers": [
+        {
+          "name": "test",
+          "uuid": "bb5823ec-8bff-47b2-91bd-540bc1b1104b",
+          "host": "192.168.1.118",
+          "model": "Unknown",
+          "uptime": 1599560496237,
+          "firmwareVersion": "3.10.4",
+          "firmwareBuild": "1",
+          "protocolVersion": null,
+          "systemInfo": {
+            "cpuName": "Intel Xeon",
+            "cpuLoad": 20.999999999999996,
+            "memory": {
+              "used": 428724224,
+              "total": 2080112640
+            },
+            "appMemory": {
+              "used": 77974048,
+              "total": 249561088
+            },
+            "nics": [
+              {
+                "desc": "ens8",
+                "mac": "52:54:00:B2:0E:DA",
+                "ip": "192.168.1.118",
+                "rxBps": 0,
+                "txBps": 0
+              }
+            ],
+            "disk": {
+              "usedKb": 7403112,
+              "totalKb": 10254612,
+              "availKb": 2310880,
+              "freeKb": 2851500,
+              "dirName": "/usr/lib/unifi-video/data/videos",
+              "devName": "overlay",
+              "usedPercent": 77
+            }
+          },
+          "cloudSettings": null,
+          "livePortSettings": {
+            "rtspEnabled": false,
+            "rtspPort": 7447,
+            "rtmpEnabled": false,
+            "rtmpPort": 1935,
+            "rtmpsEnabled": false,
+            "rtmpsPort": 7444
+          },
+          "recordingSettings": {
+            "storagePath": "/usr/lib/unifi-video/data/videos",
+            "tempStoragePath": null,
+            "mbToRetain": 40960,
+            "timeToRetain": 0,
+            "minSegmentLength": 2,
+            "maxSegmentLength": 10,
+            "segmentLength": 2
+          },
+          "emsFileStats": null,
+          "systemSettings": {
+            "timeZone": "Europe/Helsinki",
+            "defaultLanguage": "English",
+            "disableUpdateCheck": false,
+            "disableStatsGathering": false,
+            "gmtOffset": "GMT+3",
+            "disableDiscovery": false,
+            "useUpnp": false,
+            "disableAutoCameraUpdate": false,
+            "googleMapsApiKey": null,
+            "cameraPassword": "r7dshpMrM9"
+          },
+          "emailSettings": {
+            "enabled": false,
+            "publicHost": null,
+            "emailAddress": null,
+            "host": null,
+            "port": 0,
+            "useSsl": false,
+            "requiresAuthentication": false,
+            "username": null
+          },
+          "alertSettings": {
+            "motionEmailCoolDownMs": 0
+          },
+          "_id": "5f575b306f02900d34122f65"
+        }
+      ],
+      "maps": [
+        {
+          "name": "Sample",
+          "mapType": "IMAGE",
+          "lat": 0,
+          "lng": 0,
+          "googleMapType": null,
+          "tilt": 0,
+          "zoom": 0,
+          "_id": "5f5762446f02900d34122f6b"
+        }
+      ],
+      "liveViews": [],
+      "settings": {
+        "systemSettings": {
+          "timeZone": "Europe/Helsinki",
+          "defaultLanguage": "English",
+          "disableUpdateCheck": false,
+          "disableStatsGathering": false,
+          "gmtOffset": "GMT+3",
+          "disableDiscovery": false,
+          "useUpnp": false,
+          "disableAutoCameraUpdate": false,
+          "googleMapsApiKey": null,
+          "cameraPassword": "r7dshpMrM9"
+        },
+        "emailSettings": {
+          "enabled": false,
+          "publicHost": null,
+          "emailAddress": null,
+          "host": null,
+          "port": 0,
+          "useSsl": false,
+          "requiresAuthentication": false,
+          "username": null
+        },
+        "alertSettings": {
+          "motionEmailCoolDownMs": 0
+        },
+        "livePortSettings": {
+          "rtspEnabled": false,
+          "rtspPort": 7447,
+          "rtmpEnabled": false,
+          "rtmpPort": 1935,
+          "rtmpsEnabled": false,
+          "rtmpsPort": 7444
+        },
+        "_id": "5f575b306f02900d34122f65"
+      },
+      "systemInfo": {
+        "version": "3.10.4",
+        "hash": "1e3778",
+        "buildType": "release",
+        "buildJobName": "ufv/v3.10.4",
+        "buildNumber": "1",
+        "buildBranch": "v3.10.4",
+        "time": "2019-05-31 18:30",
+        "platform": "Archrolling",
+        "mongoVersion": null,
+        "protocolVersion": 67,
+        "httpPort": 7080,
+        "httpsPort": 7443,
+        "liveWsPort": 7445,
+        "liveWssPort": 7446,
+        "maxExportLimit": 10000,
+        "localAddr": null
+      },
+      "firmwares": [
+        {
+          "platform": "GEN4L",
+          "state": "READY",
+          "path": "/usr/lib/unifi-video/fw/S5L/uvc.s5l.v4.13.33.bin",
+          "version": "v4.13.33",
+          "revision": null,
+          "firmwareCode": "UVC.S5L.v4.13.33.72cea7e.190515.1808",
+          "protocolVersion": 67,
+          "url": null,
+          "md5": "177f6203272e7cf11d6d3ca87f1844b8",
+          "source": "BUNDLED",
+          "_id": "5f575b32821b97623118bec8"
+        },
+        {
+          "platform": "GEN3LM",
+          "state": "READY",
+          "path": "/usr/lib/unifi-video/fw/S2LM/uvc.s2lm.v4.13.33.bin",
+          "version": "v4.13.33",
+          "revision": null,
+          "firmwareCode": "UVC.S2LM.v4.13.33.72cea7e.190515.1810",
+          "protocolVersion": 67,
+          "url": null,
+          "md5": "e9f701e805d2c902fa19c5dfc917d4b1",
+          "source": "BUNDLED",
+          "_id": "5f575b32821b97623118beca"
+        },
+        {
+          "platform": "GEN3L",
+          "state": "READY",
+          "path": "/usr/lib/unifi-video/fw/S2L/uvc.s2l.v4.13.33.bin",
+          "version": "v4.13.33",
+          "revision": null,
+          "firmwareCode": "UVC.S2L.v4.13.33.72cea7e.190515.1804",
+          "protocolVersion": 67,
+          "url": null,
+          "md5": "ad3fbd10e1680cf31c260c03f380311c",
+          "source": "BUNDLED",
+          "_id": "5f575b33821b97623118becd"
+        },
+        {
+          "platform": "GEN2",
+          "state": "READY",
+          "path": "/usr/lib/unifi-video/fw/A5S/uvc.a5s.v4.13.33.bin",
+          "version": "v4.13.33",
+          "revision": null,
+          "firmwareCode": "UVC.A5S.v4.13.33.72cea7e.190515.1754",
+          "protocolVersion": 67,
+          "url": null,
+          "md5": "3e100cf59375f933c95abbceb96e2e1f",
+          "source": "BUNDLED",
+          "_id": "5f575b33821b97623118becf"
+        }
+      ],
+      "adminUserGroupId": "5f5762446f02900d34122f6c",
+      "newCriticalAlerts": 0
+    }
+  ],
+  "meta": {
+    "totalCount": 1,
+    "filteredCount": 1
+  }
+}

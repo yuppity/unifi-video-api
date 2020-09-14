@@ -9,7 +9,6 @@ import sys
 
 from copy import deepcopy
 
-
 try:
     from mock import Mock, patch, MagicMock
 except ModuleNotFoundError:
@@ -26,9 +25,13 @@ try:
 except ImportError:
     from urllib2 import urlopen, Request, HTTPError
 
-from helpers import mocked_response, get_ufva_w_mocked_urlopen
+from helpers import mocked_response, get_ufva_w_mocked_urlopen, \
+        empty_response
 from unifi_video import UnifiVideoAPI, CameraModelError, \
     UnifiVideoVersionError
+
+import files
+
 
 py3 = sys.version_info[0] == 3
 
@@ -48,6 +51,38 @@ with open(os.path.join(os.path.dirname(__file__),
 
 
 class APITests(unittest.TestCase):
+
+    @patch('unifi_video.api.urlopen')
+    def test_init_against_bootstrap(self, mocked_urlopen):
+        """Test API init against fresh bootstrap.json
+
+        Run through bootstrap JSONs from various UniFi Video versions.
+        """
+
+        for bootstrap in files.test_files['bootstrap.json']:
+            with open(
+                    os.path.join(
+                        os.path.dirname(__file__),
+                        'files/{}'.format(bootstrap['filename'])),
+                    'rb') as f:
+                bootstrap_json = f.read()
+
+            mocked_urlopen.side_effect = mocked_response(
+                arg_pile=[
+                    # For  GET /recording?...
+                    {'data': json.dumps(empty_response).encode('utf8')},
+                    # For GET /camera
+                    {'data': json.dumps(empty_response).encode('utf8')},
+                    # For GET /bootstrap
+                    {'data': bootstrap_json }
+                ],
+                set_cookies=True)
+
+            uva = UnifiVideoAPI(api_key='xxx')
+
+            self.assertEqual(len(uva.cameras), 0)
+            self.assertEqual(len(uva.recordings), 0)
+            self.assertEqual(uva.version, bootstrap['unifi_video_version'])
 
     @patch('unifi_video.api.urlopen')
     def test_aa_api_init(self, mocked_urlopen):
