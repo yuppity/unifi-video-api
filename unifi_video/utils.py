@@ -37,3 +37,34 @@ def format_mac_addr(mac_addr):
 
 def tz_shift(target_utc_s_offset, epoch_sec):
     return epoch_sec - target_utc_s_offset
+
+def parse_gmt_offset(gmt_hhmm):
+    '''Parse UTC offset as reported by UniFi Video
+
+    Arguments:
+        gmt_hhmm (str):
+            UTC offset from /bootstrap JSON
+            (``settings.systemSettings.gmtOffset``)
+
+    Returns
+        int: UTC offset in seconds
+    '''
+
+    valid = re.match(r'gmt([+-])([0-9]{1,2})(?::([0-9]{1,2}))?', gmt_hhmm, re.I)
+
+    if not valid:
+        raise ValueError('"{}" is not a valid GMT-offset string'.format(
+            gmt_hhmm))
+
+    seconds = [
+        i[0](i[1])
+        for i in zip(
+            [
+                lambda x: 44 - ord(x),
+                lambda x: int(x or 0) * 3600,
+                lambda x: int(x or 0) * 60,
+            ],
+            valid.groups())
+    ]
+
+    return seconds[0] * sum(seconds[1:])
