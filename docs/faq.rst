@@ -45,6 +45,40 @@ This goes for all the download methods:
 - :func:`unifi_video.recording.UnifiVideoRecording.snapshot`
 - :func:`unifi_video.recording.UnifiVideoRecording.download`
 
+What is the difference between the three camera collections?
+------------------------------------------------------------
+A :class:`UnifiVideoAPI` object has three camera collections:
+
+.. code-block:: python
+
+   from unifi_video import UnifiVideoAPI
+
+   uva = UnifiVideoAPI(api_key='xxxxxx', addr='10.3.2.1')
+
+   for camera in uva.cameras:
+     print(camera)
+
+   for camera in uva.active_cameras:
+     print(camera)
+
+   for camera in uva.managed_cameras:
+     print(camera)
+
+:attr:`UnifiVideoAPI.cameras`
++++++++++++++++++++++++++++++
+Contains every camera the associated UniFi Video server is aware of. These
+could be anything from an unmanaged camera on the network to an old long ago
+removed camera that still has a lingering database entry.
+
+:attr:`UnifiVideoAPI.managed_cameras`
++++++++++++++++++++++++++++++++++++++
+Only contains cameras that are managed by the UniFi Video server. Note that
+this does not exclude cameras that are offline.
+
+:attr:`UnifiVideoAPI.active_cameras`
+++++++++++++++++++++++++++++++++++++
+Cameras that are both managed by the UniFi Video server and currently online.
+
 unifi-video-api, unifi-video, unifi_video: which is it?
 -------------------------------------------------------
 `unifi-video-api` is the name of the `Github repository <https://github.com/yuppity/unifi-video-api>`_,
