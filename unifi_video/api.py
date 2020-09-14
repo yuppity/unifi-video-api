@@ -87,6 +87,10 @@ class UnifiVideoAPI(object):
             Like :attr:`UnifiVideoAPI.cameras` but only includes cameras
             that are both connected and managed by the UniFi Video instance.
 
+        managed_cameras (:class:`UnifiVideoCollection`):
+            Includes all cameras that are managed by the UniFi Video instance,
+            whether they're online or not.
+
         recordings (:class:`UnifiVideoCollection`):
             Collection of :class:`~unifi_video.recording.UnifiVideoRecording`
             objects
@@ -121,6 +125,7 @@ class UnifiVideoAPI(object):
 
         self.cameras = UnifiVideoCollection(UnifiVideoCamera)
         self.active_cameras = UnifiVideoCollection(UnifiVideoCamera)
+        self.managed_cameras = UnifiVideoCollection(UnifiVideoCamera)
         self.recordings = UnifiVideoCollection(UnifiVideoRecording)
         self.refresh_cameras()
         self.refresh_recordings()
@@ -326,16 +331,47 @@ class UnifiVideoAPI(object):
             return False
 
     def refresh_cameras(self):
-        '''GET cameras from the server and update ``self.cameras``.
+        '''GET cameras from the server and update camera collections
+
+        Touches :attr:`UnifiVideoAPI.cameras`,
+        :attr:`UnifiVideoAPI.active_cameras`, and
+        :attr:`UnifiVideoAPI.managed_cameras`
         '''
 
+        collections = {
+            'cameras': {
+                'new_ids': set(),
+                'accepts': lambda _: True,
+            },
+            'active_cameras': {
+                'new_ids': set(),
+                'accepts': lambda cam: cam.managed and cam.connected,
+            },
+            'managed_cameras': {
+                'new_ids': set(),
+                'accepts': lambda cam: cam.managed,
+            },
+        }
+
+        # Suspicion: the type check provides zero value and exists simply due
+        # to some momentary lapse in coherence at the time it was originally
+        # written. Leaving it be, on the off chance that there was a good
+        # reason for it. Unable to investigate atm.
         cameras = self.get(endpoints['cameras'])
-        if isinstance(cameras, dict):
-            for camera_data in cameras.get('data', []):
-                camera = UnifiVideoCamera(self, camera_data)
-                self.cameras.add(camera)
-                if camera.managed and camera.connected:
-                    self.active_cameras.add(camera)
+        if not isinstance(cameras, dict):
+            return
+
+        for camera in (
+                UnifiVideoCamera(self, c) for c in cameras.get('data', [])):
+            for cname, collection in collections.items():
+                if collection['accepts'](camera):
+                    getattr(self, cname).add(camera)
+                    collection['new_ids'].add(camera._id)
+
+        for cname in collections.keys():
+            for camera_id in list(getattr(self, cname).keys()):
+                if camera_id not in collections[cname]['new_ids']:
+                    del getattr(self, cname)[camera_id]
 
     def refresh_recordings(self, limit=300):
         """GET recordings from the server and update ``self.recordings``.
