@@ -45,6 +45,16 @@ class UnifiVideoVersionError(ValueError):
             message = 'Unsupported UniFi Video version'
         super(UnifiVideoVersionError, self).__init__(message)
 
+class UnifiVideoHTTPError(ValueError):
+    """HTTP error with message from UniFi Video server"""
+
+    def __init__(self, code=None, message=None, caused_by=None):
+        msg = 'HTTP {} from UniFi Video.'.format(code)
+        if message:
+            msg += ' Error: {}.'.format(message)
+        if caused_by:
+            msg += ' Caused by: {}'.format(caused_by)
+        super(UnifiVideoHTTPError, self).__init__(msg)
 
 class UnifiVideoAPI(object):
     """Encapsulates a single UniFi Video server.
@@ -297,6 +307,14 @@ class UnifiVideoAPI(object):
         except HTTPError as err:
             if err.code == 401 and self.login_attempts == 0:
                 return self._handle_http_401(url, raw)
+            elif err.code == 400 and hasattr(err, 'headers') \
+                    and 'application/json' in err.headers.get('content-type') :
+                err_body = json.loads(err.read().decode('utf8'))
+                if isinstance(err_body, dict) and err_body.get('rc') == 'error':
+                    raise UnifiVideoHTTPError(
+                        code=err.code,
+                        message=err_body.get('message'),
+                        caused_by=err_body.get('causedBy'))
             return False
 
     def post(self, url, data=None, raw=False, _method=None):
