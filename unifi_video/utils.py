@@ -1,15 +1,6 @@
 from datetime import datetime
 import re
 
-def camel_to_snake(text):
-    text = text.split('_')
-    return text[0] + ''.join([i.capitalize() for i in text[1:]])
-
-def get_arguments():
-    from inspect import getargvalues, stack
-    return {k: v for k, v in getargvalues(stack()[1][0])[-1:][0].items() \
-            if k != 'self'}
-
 def iso_str_to_epoch(iso_str):
     try:
         iso_str = iso_str.strip()
