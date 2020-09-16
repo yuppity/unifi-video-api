@@ -200,7 +200,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
             Custom text overlayd over the image
         mac_addr (str):
             Camera MAC address
-        utc_h_offset (int):
+        utc_h_offset (int or NoneType):
             UTC offset in hours
         state (str):
             Camera state
@@ -274,10 +274,12 @@ class UnifiVideoCamera(UnifiVideoSingle):
             if self.last_seen else None
 
         try:
-            self.utc_h_offset = int((data.get('deviceSettings') or {})\
-                .get('timezone', '').split('GMT').pop())
+            self.utc_offset = utils.parse_gmt_offset(
+                (data.get('deviceSettings') or {}).get('timezone', ''))
+            self.utc_h_offset = self.utc_offset / 3600
         except (TypeError, ValueError):
-            self.utc_h_offset = 0
+            self.utc_offset = None
+            self.utc_h_offset = None
 
     def _simple_isp_actionable(self, setting_name, value):
         isp = self._data['ispSettings']
@@ -342,10 +344,10 @@ class UnifiVideoCamera(UnifiVideoSingle):
         Note: times should be in the format ``YYYY-MM-DD HH:MM:SS``.
         """
 
-        start_time = utils.tz_shift(self.utc_h_offset * 3600,
+        start_time = utils.tz_shift(self.utc_h_offset or 0 * 3600,
             utils.iso_str_to_epoch(start_time)) * 1000
 
-        end_time = utils.tz_shift(self.utc_h_offset * 3600,
+        end_time = utils.tz_shift(self.utc_h_offset or 0 * 3600,
             utils.iso_str_to_epoch(end_time)) * 1000
 
         return self._api.get(endpoints['recording_span'](

@@ -26,7 +26,7 @@ except ImportError:
     from urllib2 import urlopen, Request, HTTPError
 
 from helpers import mocked_response, get_ufva_w_mocked_urlopen, \
-        empty_response
+        empty_response, read_fp
 from unifi_video import UnifiVideoAPI, CameraModelError, \
     UnifiVideoVersionError
 
@@ -248,6 +248,111 @@ class CollectionTests(unittest.TestCase):
                 self.assertEqual(
                     set([oid(i) for i in expected['ids']]),
                     set([cam._id for cam in getattr(uva, coll_name)]))
+
+class DatetimeTimezoneTests(unittest.TestCase):
+
+    sample_camera = json.loads(responses['camera'].decode('utf8'))
+
+    bootstrap = {
+        b['unifi_video_version']: read_fp(b['filename']) \
+            for b in files.test_files['bootstrap.json']
+        if b['unifi_video_version'] in ('3.9.12', '3.10.13')
+    }
+
+    @staticmethod
+    def camera_w_offset(offset):
+        c = deepcopy(DatetimeTimezoneTests.sample_camera)
+        c['data'][0]['deviceSettings']['timezone'] = 'GMT{:+d}'.format(offset)
+        return c
+
+    @staticmethod
+    def cam_oid(camera, oid):
+        camera['data'][0]['_id'] = oid
+        return camera
+
+    @patch('unifi_video.api.urlopen')
+    def test_nooffset_init(self, mocked_urlopen):
+        '''Naive UnifiVideoAPI init against zero cam UniFi Video
+        version < v3.10.2 should result in utc_offset == None
+        '''
+        mocked_urlopen.side_effect = mocked_response(
+            arg_pile=[
+                {'data': json.dumps(empty_response).encode('utf8')},
+                {'data': json.dumps(empty_response).encode('utf8')},
+                {'data': json.dumps(DatetimeTimezoneTests.bootstrap['3.9.12'])\
+                    .encode('utf8')},
+            ])
+        self.assertIsNone(UnifiVideoAPI(api_key='****').utc_offset)
+
+    @patch('unifi_video.api.urlopen')
+    def test_offset_from_cam(self, mocked_urlopen):
+        '''Naive UnifiVideoAPI init against UniFi Video version < v3.10.2
+        should result in utc_offset matching that of attached cameras
+        '''
+        camera = DatetimeTimezoneTests.camera_w_offset(5)
+        mocked_urlopen.side_effect = mocked_response(
+            arg_pile=[
+                {'data': json.dumps(empty_response).encode('utf8')},
+                {'data': json.dumps(camera).encode('utf8')},
+                {'data': json.dumps(DatetimeTimezoneTests.bootstrap['3.9.12'])\
+                    .encode('utf8')},
+            ])
+        self.assertEqual(UnifiVideoAPI(api_key='****').utc_offset, 5 * 3600)
+
+    @patch('unifi_video.api.urlopen')
+    def test_utc_offset_kwarg_authority(self, mocked_urlopen):
+        '''UnifiVideoAPI init with utc_offset_sec should ignore offsets
+        reported by UniFi Video server.
+        '''
+        camera = DatetimeTimezoneTests.camera_w_offset(5)
+        utc_offset_sec = 12345
+
+        mocked_urlopen.side_effect = mocked_response(
+            arg_pile=[
+                {'data': json.dumps(empty_response).encode('utf8')},
+                {'data': json.dumps(camera).encode('utf8')},
+                {'data': json.dumps(DatetimeTimezoneTests.bootstrap['3.9.12'])\
+                    .encode('utf8')},
+            ])
+        self.assertEqual(
+            UnifiVideoAPI(
+                api_key='****', utc_offset_sec=utc_offset_sec).utc_offset,
+            12345)
+
+        mocked_urlopen.side_effect = mocked_response(
+            arg_pile=[
+                {'data': json.dumps(empty_response).encode('utf8')},
+                {'data': json.dumps(camera).encode('utf8')},
+                {'data': json.dumps(DatetimeTimezoneTests.bootstrap['3.10.13'])\
+                    .encode('utf8')},
+            ])
+        self.assertEqual(
+            UnifiVideoAPI(
+                api_key='****', utc_offset_sec=utc_offset_sec).utc_offset,
+            12345)
+
+    @patch('unifi_video.api.urlopen')
+    def test_camera_offset_consensus(self, mocked_urlopen):
+        '''Naive UnifiVideoAPI init against UniFi Video version < v3.10.2
+        with cameras of differing offsets should ignore any offset reported
+        by the cameras.
+        '''
+        cameras = {
+            'data': [
+                c['data'][0] for c in [
+                    DatetimeTimezoneTests.cam_oid(
+                        DatetimeTimezoneTests.camera_w_offset(i * 3600),
+                        '{:024d}'.format(i))
+                    for i in (1, 2, 3)]]
+        }
+        mocked_urlopen.side_effect = mocked_response(
+            arg_pile=[
+                {'data': json.dumps(empty_response).encode('utf8')},
+                {'data': json.dumps(cameras).encode('utf8')},
+                {'data': json.dumps(DatetimeTimezoneTests.bootstrap['3.9.12'])\
+                    .encode('utf8')},
+            ])
+        self.assertIsNone(UnifiVideoAPI(api_key='****').utc_offset)
 
 if __name__ == '__main__':
     unittest.main()

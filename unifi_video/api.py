@@ -16,6 +16,7 @@ import json
 from .camera import UnifiVideoCamera
 from .recording import UnifiVideoRecording
 from .collections import UnifiVideoCollection
+from .utils import parse_gmt_offset
 
 from distutils.version import LooseVersion
 
@@ -59,6 +60,8 @@ class UnifiVideoAPI(object):
             connecting over HTTPS
         check_ufv_version (bool): Set to ``False`` to use with untested
             UniFi Video versions
+        utc_offset_sec (int or NoneType): UniFi Video server's UTC offset
+            in seconds.
 
     Note:
 
@@ -103,7 +106,7 @@ class UnifiVideoAPI(object):
 
     def __init__(self, api_key=None, username=None, password=None,
             addr='localhost', port=7080, schema='http', verify_cert=True,
-            check_ufv_version=True):
+            check_ufv_version=True, utc_offset_sec=None):
 
         if not verify_cert and schema == 'https':
             import ssl
@@ -118,6 +121,7 @@ class UnifiVideoAPI(object):
         self.jsession_av = None
         self.username = username
         self.password = password
+        self.utc_offset = utc_offset_sec
         self.base_url = '{}://{}:{}/api/2.0/'.format(schema, addr, port)
         self._version_stickler = check_ufv_version
 
@@ -130,6 +134,17 @@ class UnifiVideoAPI(object):
         self.refresh_cameras()
         self.refresh_recordings()
 
+        # /bootstrap: data[0].settings.systemSettings.gmtOffset first appeared
+        # in version 3.10.2. For earlier versions, try to determine the offset
+        # by comparing what is reported by attached cameras. If all cameras
+        # report the same offset, use that offset for the server as well
+        if self.utc_offset is None:
+            camera_utc_offsets = set([
+                c.utc_offset for c in self.active_cameras
+                if c.utc_offset is not None])
+            if len(camera_utc_offsets) == 1:
+                self.utc_offset = camera_utc_offsets.pop()
+
     def _load_data(self, data):
         if not isinstance(data, dict):
             raise ValueError('Server responded with unknown bootstrap data')
@@ -138,6 +153,17 @@ class UnifiVideoAPI(object):
         self.version = self._data[0].get('systemInfo', {}).get('version', None)
 
         self._is_supported = False
+
+        if self.utc_offset is None:
+            system_settings = \
+                self._data[0].get('settings', {}).get('systemSettings', {}) \
+                    or self._data[0].get('servers', [{}])[0]\
+                        .get('systemSettings', {})
+            try:
+                self.utc_offset = parse_gmt_offset(
+                    system_settings.get('gmtOffset', ''))
+            except (TypeError, ValueError):
+                pass
 
         if self.version in UnifiVideoAPI._supported_ufv_versions:
             self._is_supported = True
