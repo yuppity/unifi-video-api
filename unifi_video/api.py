@@ -16,7 +16,7 @@ import json
 from .camera import UnifiVideoCamera
 from .recording import UnifiVideoRecording
 from .collections import UnifiVideoCollection
-from .utils import parse_gmt_offset
+from .utils import parse_gmt_offset, dt_resolvable_to_ms
 
 from distutils.version import LooseVersion
 
@@ -459,8 +459,8 @@ class UnifiVideoAPI(object):
             if is_match and (not managed_only or camera.managed):
                 return camera
 
-    def get_recordings(self, rec_type='all', camera=None, order='desc',
-            limit=0, req_each=False):
+    def get_recordings(self, rec_type='all', camera=None, start_time=None,
+            end_time=None, limit=0, order='desc', req_each=False):
         '''Fetch recording listing
 
         Args:
@@ -469,8 +469,16 @@ class UnifiVideoAPI(object):
 
             camera (:class:`~unifi_video.camera.UnifiVideoCamera` or str or \
                     list of :class:`~unifi_video.camera.UnifiVideoCamera` or \
-                    list of str):
+                    list of str, optional):
                 Camera or cameras whose recordings to fetch
+
+            start_time (datetime or str or int, optional):
+                Recording start time. (See
+                :meth:`~unifi_video.utils.dt_resolvable_to_ms`.)
+
+            end_time (datetime or str or int, optional):
+                Recording end time. (See
+                :meth:`~unifi_video.utils.dt_resolvable_to_ms`.)
 
             order (str, optional):
                 Sort order: *desc* or *asc*. Recordings are sorted by their
@@ -490,6 +498,11 @@ class UnifiVideoAPI(object):
         Returns:
             Iterable[:class:`~unifi_video.recording.UnifiVideoRecording`]
 
+        Note:
+            You can use naive :class:`~datetime.datetime` objects or strings
+            when you want to mark time in the UniFi Server's local time.
+            Otherwise, use Unix timestamps (*int*, **in seconds**) or timezone
+            aware :class:`~datetime.datetime` objects.
         '''
 
         rec_types = {
@@ -504,6 +517,14 @@ class UnifiVideoAPI(object):
             'idsOnly': req_each,
             'limit': limit if limit else None,
             'cause': rec_types[rec_type],
+            'startTime': dt_resolvable_to_ms(
+                start_time,
+                utc_offset=self.utc_offset,
+                resolution=1000) if start_time else None,
+            'endTime': dt_resolvable_to_ms(
+                end_time,
+                utc_offset=self.utc_offset,
+                resolution=1000) if end_time else None,
             'cameras': camera if isinstance(camera, (list, tuple)) else [camera],
         }
 
