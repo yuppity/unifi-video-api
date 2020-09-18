@@ -17,8 +17,10 @@ class UnifiVideoRecording(UnifiVideoSingle):
 
     Attributes:
         _id (str): Recording ID (MongoDB ObjectID as hex string)
-        start_time (datetime): Recording start time and date
-        end_time (datetime): Recording end time and date
+        start_time (datetime): Recording start time and date (local time)
+        end_time (datetime): Recording end time and date (local time)
+        start_time_utc (datetime): Recording start time and date (UTC)
+        end_time_utc (datetime): Recording end time and date (UTC)
         rec_type (str): Recording type. Either `motionRecording`,
             or `fullTimeRecording`.
         locked (bool, NoneType): Whether or not recording is locked
@@ -41,6 +43,10 @@ class UnifiVideoRecording(UnifiVideoSingle):
         self.start_time = datetime.fromtimestamp(
             int(data.get('startTime', 0) / 1000))
         self.end_time = datetime.fromtimestamp(
+            int(data.get('endTime', 0) / 1000))
+        self.start_time_utc = datetime.utcfromtimestamp(
+            int(data.get('startTime', 0) / 1000))
+        self.end_time_utc = datetime.utcfromtimestamp(
             int(data.get('endTime', 0) / 1000))
 
     def download(self, filename=None):
