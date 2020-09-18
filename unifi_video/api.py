@@ -308,7 +308,8 @@ class UnifiVideoAPI(object):
             if err.code == 401 and self.login_attempts == 0:
                 return self._handle_http_401(url, raw)
             elif err.code == 400 and hasattr(err, 'headers') \
-                    and 'application/json' in err.headers.get('content-type') :
+                    and 'application/json' in err.headers.get(
+                        'content-type', ''):
                 err_body = json.loads(err.read().decode('utf8'))
                 if isinstance(err_body, dict) and err_body.get('rc') == 'error':
                     raise UnifiVideoHTTPError(
