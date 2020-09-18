@@ -224,9 +224,9 @@ class UnifiVideoAPI(object):
                     return True
 
     def _urlopen(self, req):
-        try:
+        if hasattr(self, '_ssl_context'):
             return urlopen(req, context=self._ssl_context)
-        except AttributeError:
+        else:
             return urlopen(req)
 
     def _get_response_content(self, res, raw=False):
