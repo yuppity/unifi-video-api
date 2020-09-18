@@ -24,3 +24,4 @@ Table of Contents
    modules/api
    modules/camera
    modules/recording
+   modules/utils
