@@ -336,10 +336,10 @@ class UnifiVideoCamera(UnifiVideoSingle):
         timespan, between ``start_time`` and ``end_time``.
 
         Arguments:
-            start_time (datetime or str or int, optional):
+            start_time (datetime or str or int):
                 Recording start time. (See
                 :meth:`~unifi_video.utils.dt_resolvable_to_ms`.)
-            end_time (datetime or str or int, optional):
+            end_time (datetime or str or int):
                 Recording end time. (See
                 :meth:`~unifi_video.utils.dt_resolvable_to_ms`.)
             filename (str, optional):
