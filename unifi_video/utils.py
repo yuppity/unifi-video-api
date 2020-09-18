@@ -2,25 +2,6 @@ from __future__ import print_function, unicode_literals
 from datetime import datetime, timedelta
 import re
 
-def iso_str_to_epoch(iso_str):
-    try:
-        iso_str = iso_str.strip()
-        if not re.match(r'[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt\s](?:[0-9]{2}:?){3}',
-                iso_str):
-            raise ValueError
-
-        _date, _time = re.split(r'[Tt\s]', iso_str)
-        year, month, day = [int(i) for i in _date.strip().split('-')]
-        hh, mm, ss = [int(i.strip()) for i in _time.strip().split(':')]
-
-        dtime = datetime(year, month, day, hh, mm, ss)
-
-        return int((dtime - datetime(1970, 1, 1)).total_seconds())
-
-    except Exception:
-        raise ValueError('Unable to parse "{}". Use the following ISO ' \
-            'format: YYYY-MM-DD HH:MM:SS'.format(iso_str))
-
 def dt_resolvable_to_ms(resolvable, utc_offset=0, resolution=6e4):
     '''Convert datetime resolvable to milliseconds since the Unix epoch.
 
@@ -94,9 +75,6 @@ def format_mac_addr(mac_addr):
         return 'ffffffffffff'
     return ':'.join(re.search(r'(..)(..)(..)(..)(..)(..)',
         mac_addr).groups()).lower()
-
-def tz_shift(target_utc_s_offset, epoch_sec):
-    return epoch_sec - target_utc_s_offset
 
 def parse_gmt_offset(gmt_hhmm):
     '''Parse UTC offset as reported by UniFi Video

@@ -332,23 +332,33 @@ class UnifiVideoCamera(UnifiVideoSingle):
                 self._id, int(time.time())))
 
     def recording_between(self, start_time, end_time, filename=None):
-        """Download a recording of the camera's footage from an arbitrary
+        '''Download a recording of the camera's footage from an arbitrary
         timespan, between ``start_time`` and ``end_time``.
 
-        :param str start_time: Start time
-        :param str end_time: End time
-        :param filename: Filename to save the recording to (a ZIP file).
-            Will use whatever the server provides if ``None``.
-        :type filename: str or None
+        Arguments:
+            start_time (datetime or str or int, optional):
+                Recording start time. (See
+                :meth:`~unifi_video.utils.dt_resolvable_to_ms`.)
+            end_time (datetime or str or int, optional):
+                Recording end time. (See
+                :meth:`~unifi_video.utils.dt_resolvable_to_ms`.)
+            filename (str, optional):
+                Filename to save the recording to (a ZIP file).
+                Will use whatever the server provides if left out.
 
-        Note: times should be in the format ``YYYY-MM-DD HH:MM:SS``.
-        """
+        Tip:
+            Widen the time span by a few seconds at each end. UniFi Video often
+            falls a little short of the exact start and end times.
+        '''
 
-        start_time = utils.tz_shift(self.utc_h_offset or 0 * 3600,
-            utils.iso_str_to_epoch(start_time)) * 1000
-
-        end_time = utils.tz_shift(self.utc_h_offset or 0 * 3600,
-            utils.iso_str_to_epoch(end_time)) * 1000
+        start_time = utils.dt_resolvable_to_ms(
+            start_time,
+            utc_offset=self._api.utc_offset,
+            resolution=1000)
+        end_time = utils.dt_resolvable_to_ms(
+            end_time,
+            utc_offset=self._api.utc_offset,
+            resolution=1000)
 
         return self._api.get(endpoints['recording_span'](
             self._id, start_time, end_time), filename if filename else '')
