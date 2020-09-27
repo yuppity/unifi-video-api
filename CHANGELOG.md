@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 0.2.0 (2020-XX-XX)
+
+### Added
+* `UnifiVideoAPI.get_recordings()` for smarter recording listing
+* `UnifiVideoAPI.{active,managed}_cameras` collections
+* `UnifiVideoAPI.get_camera()`: new kw arg: `managed_only`
+* `UnifiVideoCamera` attributes: `state`, `managed`, `provisioned`,
+  `managed_by_others`, `disconnect_reason`, `connected`, `last_recording_id`,
+  `last_recording_start_time`, `last_seen`, `last_seen_ndt`
+* Datetime utilities
+* Keyword arg for `UnifiVideoAPI` init: `utc_offset_sec`
+* Throw `UnifiVideoHTTPError` on HTTP 400 from UniFi Video
+* `UnifiVideoRecording` attributes: `start_time`, `end_time`
+
+### Changed
+* Accept start and end times as `datetime`, `int` or `str` in
+  `UnifiVideoCamera.recording_between()`
+
 ## 0.1.8 (2020-09-03)
 
 ### Added
