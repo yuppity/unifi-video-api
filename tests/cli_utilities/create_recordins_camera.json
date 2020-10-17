@@ -1,0 +1,253 @@
+{
+    "_id" : { "$oid": "5bfb35230f12f177788ec2ac" },
+    "name" : "UVC G3",
+    "uuid" : "dbdfc0c3-f71a-390c-b223-b2a9c18d1480",
+    "host" : "192.168.2.2",
+    "model" : "UVC G3",
+    "uptime" : 1602131242678,
+    "firmwareVersion" : "v4.23.8",
+    "firmwareBuild" : "0eba6e3",
+    "protocolVersion" : 67,
+    "systemInfo" : {
+        "cpuName" : "ARMv7 Processor rev 1 (v7l)",
+        "cpuLoad" : 33.0,
+        "memory" : {
+            "used" : 55836672,
+            "total" : 358748160
+        },
+        "nics" : [ 
+            {
+                "desc" : "eth0",
+                "mac" : "",
+                "ip" : "",
+                "rxBps" : 18416,
+                "txBps" : 893227
+            }
+        ]
+    },
+    "mac" : "FCECDAD81CD1",
+    "managed" : true,
+    "managedByOthers" : true,
+    "provisioned" : true,
+    "managementRequested" : true,
+    "unmanagementRequested" : false,
+    "lastSeen" : 1602131419806,
+    "internalHost" : "192.168.2.2",
+    "state" : "CONNECTED",
+    "platform" : "GEN3L",
+    "controllerHostAddress" : "192.168.2.1",
+    "controllerHostPort" : 7442,
+    "username" : "ubnt",
+    "encryptedPassword" : { "$binary" : "uIyyxvy1+reWPhXwCrW6DUj5L3PHGYg2nQiETr5u08TbU4BkJCkCsX/3UdpstgO0sZSVbTRo96VMz+rGbPT+23J01j7STnNEAzyGdUagXj1iuRxg6S/XCCdJsAacgIG4fkiboRqTcHHkiY1UObtMOLawi/E1uWPU+Fv3MGIl9719eDn8lDT+ygKM4I1j2Uqs/MLLIZ2y19SFbMzlI0MH4Ol1jUEquYbhhbYytu5YjyYmNP6KYW9hU3eS5oLQiaqRRfU9AUCE79eHuRcVNDBQQIGBGAKw==", "$type" : "00" },
+    "lastRecordingId" : { "$oid": "5f86fb0372cc0146d7f982a1" },
+    "lastRecordingStartTime" : 1602681600356,
+    "recordingIndicator" : "FTR_INPROGRESS",
+    "enableRecordingIndicator" : false,
+    "deviceSettings" : {
+        "name" : "UVC-G3",
+        "timezone" : "Europe/Helsinki",
+        "persists" : false
+    },
+    "enableSuggestedVideoSettings" : false,
+    "micVolume" : 100,
+    "audioBitRate" : 32000,
+    "channels" : [ 
+        {
+            "id" : "0",
+            "name" : "video1",
+            "enabled" : true,
+            "isRtspEnabled" : false,
+            "rtspUris" : [ 
+                "rtsp://192.168.2.1:7447/5bfb35230f12f177788ec2ac_0"
+            ],
+            "isRtmpEnabled" : false,
+            "rtmpUris" : [ 
+                "rtmp://192.168.2.1:1935/live/5bfb35230f12f177788ec2ac_0"
+            ],
+            "isRtmpsEnabled" : false,
+            "rtmpsUris" : [ 
+                "rtmps://192.168.2.1:7444/live/5bfb35230f12f177788ec2ac_0"
+            ],
+            "width" : 1920,
+            "height" : 1080,
+            "fps" : 15,
+            "bitrate" : 6000000,
+            "minBitrate" : 32000,
+            "maxBitrate" : 6000000,
+            "fpsValues" : [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24, 25, 30],
+            "idrInterval" : 0,
+            "isAdaptiveBitrateEnabled" : false
+        }, 
+        {
+            "id" : "1",
+            "name" : "video3",
+            "enabled" : true,
+            "isRtspEnabled" : true,
+            "rtspUris" : [ 
+                "rtsp://192.168.2.1:7447/5bfb35230f12f177788ec2ac_1"
+            ],
+            "isRtmpEnabled" : false,
+            "rtmpUris" : [ 
+                "rtmp://192.168.2.1:1935/live/5bfb35230f12f177788ec2ac_1"
+            ],
+            "isRtmpsEnabled" : false,
+            "rtmpsUris" : [ 
+                "rtmps://192.168.2.1:7444/live/5bfb35230f12f177788ec2ac_1"
+            ],
+            "width" : 1024,
+            "height" : 576,
+            "fps" : 5,
+            "bitrate" : 1000000,
+            "minBitrate" : 32000,
+            "maxBitrate" : 2000000,
+            "fpsValues" : [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24, 25, 30],
+            "idrInterval" : 0,
+            "isAdaptiveBitrateEnabled" : false
+        }, 
+        {
+            "id" : "2",
+            "name" : "video2",
+            "enabled" : true,
+            "isRtspEnabled" : true,
+            "rtspUris" : [ 
+                "rtsp://192.168.2.1:7447/5bfb35230f12f177788ec2ac_2"
+            ],
+            "isRtmpEnabled" : false,
+            "rtmpUris" : [ 
+                "rtmp://192.168.2.1:1935/live/5bfb35230f12f177788ec2ac_2"
+            ],
+            "isRtmpsEnabled" : false,
+            "rtmpsUris" : [ 
+                "rtmps://192.168.2.1:7444/live/5bfb35230f12f177788ec2ac_2"
+            ],
+            "width" : 640,
+            "height" : 360,
+            "fps" : 15,
+            "bitrate" : 200000,
+            "minBitrate" : 32000,
+            "maxBitrate" : 1000000,
+            "fpsValues" : [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24, 25, 30],
+            "idrInterval" : 0,
+            "isAdaptiveBitrateEnabled" : false
+        }
+    ],
+    "defaultStreamingChannel" : "1",
+    "ispSettings" : {
+        "brightness" : 50,
+        "contrast" : 50,
+        "denoise" : 50,
+        "hue" : 50,
+        "saturation" : 50,
+        "sharpness" : 50,
+        "flip" : 0,
+        "mirror" : 0,
+        "autoFlipMirror" : 0,
+        "wdr" : 1,
+        "aeMode" : "auto",
+        "irLedMode" : "manual",
+        "irLedLevel" : 215,
+        "focusMode" : "ztrig",
+        "focusPosition" : 0,
+        "zoomPosition" : 0,
+        "icrSensitivity" : 2,
+        "aggressiveAntiFlicker" : 0,
+        "enable3dnr" : 1,
+        "dZoomStreamId" : 4,
+        "dZoomCenterX" : 50,
+        "dZoomCenterY" : 50,
+        "dZoomScale" : 0,
+        "lensDistortionCorrection" : 1,
+        "enableExternalIr" : 0,
+        "touchFocusX" : 1001,
+        "touchFocusY" : 1001,
+        "irOnValBrightness" : 50,
+        "irOnStsBrightness" : 0,
+        "irOnValContrast" : 50,
+        "irOnStsContrast" : 0,
+        "irOnValDenoise" : 50,
+        "irOnStsDenoise" : 0,
+        "irOnValHue" : 50,
+        "irOnStsHue" : 0,
+        "irOnValSaturation" : 50,
+        "irOnStsSaturation" : 0,
+        "irOnValSharpness" : 50,
+        "irOnStsSharpness" : 0
+    },
+    "osdSettings" : {
+        "tag" : "Some Tag",
+        "overrideMessage" : true,
+        "enableDate" : 1,
+        "enableLogo" : 0,
+        "enableStreamerStatsLevel" : 0
+    },
+    "recordingSettings" : {
+        "motionRecordEnabled" : true,
+        "fullTimeRecordEnabled" : true,
+        "channel" : "0",
+        "prePaddingSecs" : 1,
+        "postPaddingSecs" : 0
+    },
+    "zones" : [],
+    "enablePrivacyMasks" : false,
+    "privacyMasks" : [],
+    "mapSettings" : {
+        "x" : 0.0,
+        "y" : 0.0,
+        "angle" : 0.0,
+        "radius" : 0.0,
+        "rotation" : 0.0
+    },
+    "networkStatus" : {
+        "connectionState" : 2,
+        "connectionStateDescription" : "CONNECTED",
+        "frequency" : 0,
+        "quality" : 0,
+        "qualityMax" : 0,
+        "signalLevel" : 0,
+        "linkSpeedMbps" : 100,
+        "ipAddress" : "192.168.2.2",
+        "linkSpeed" : 100
+    },
+    "status" : {
+        "recordingStatus" : {
+            "0" : {
+                "motionRecordingEnabled" : true,
+                "fullTimeRecordingEnabled" : true
+            },
+            "1" : {
+                "motionRecordingEnabled" : false,
+                "fullTimeRecordingEnabled" : false
+            },
+            "2" : {
+                "motionRecordingEnabled" : false,
+                "fullTimeRecordingEnabled" : false
+            }
+        },
+        "remoteHost" : "192.168.2.1",
+        "remotePort" : 7442
+    },
+    "authToken" : {
+        "authToken" : "187709c87cfe35cfbfabb5c8e765ff0a76d643d5dd725b7ba5b35a1dd034cc85"
+    },
+    "certSignature" : { "$binary" : "OuTc2p4osche9sCJxk8Uvzo9988Ni7cfrsUav5hmJiJq8hrzoeB61JB6QHR5jroTiWybvT0YfNeZC8NUCp0UcOB6kEo739Pdv1QZn+RHp/qp83Pe7YL90iYKIk9UDXGcmg/28E+ewTo+aT2sgS7K8X9cay169qvrSxRv4dhwNjHjfYu8PAx7NNJ7hgTxaazfZP1PqaaiCFAEGGnixDiCTyR8duqrgrMq2aHwAG7FqFFxkeBwfaVzKRj+YJeibooL9KEEisJfeELGZ4ZWbZV5c7JSqb2oYpkt0bMpBUsSgGYbBGC1pQcx5Cgw==", "$type" : "00" },
+    "hasDefaultCredentials" : false,
+    "analyticsSettings" : {
+        "enableSoundAlert" : false,
+        "animateLedOnMotion" : false,
+        "soundAlertVolume" : 100,
+        "minimumMotionSecs" : 2,
+        "endMotionAfterSecs" : 5,
+        "consecutiveRatio" : -1,
+        "useNewMotionAlgo" : false,
+        "bgModel" : "ubnt3"
+    },
+    "enableStatusLed" : true,
+    "ledFaceAlwaysOnWhenManaged" : true,
+    "enableSpeaker" : true,
+    "systemSoundsEnabled" : true,
+    "enableStats" : true,
+    "speakerVolume" : 100,
+    "deleted" : false,
+    "sshPort" : 0,
+    "authStatus" : "AUTHENTICATED"
+}
