@@ -34,7 +34,7 @@ endpoints = {
     'recording': lambda x: 'recording/{}'.format(
         x._id if isinstance(x, UnifiVideoRecording) else x),
     'bootstrap': 'bootstrap',
-
+    'delete_all': 'recording?deleteRecordings&confirmed=true',
 }
 
 class UnifiVideoVersionError(ValueError):
@@ -545,6 +545,11 @@ class UnifiVideoAPI(object):
                     endpoints['recordings'](None),
                     url_params=url_params)['data']
             )
+
+    def delete_all_recordings(self):
+        """ Delete all existing recordings """
+
+        return self.delete(endpoints['delete_all'])
 
     def __str__(self):
         return '{}: {}'.format(type(self).__name__, {
