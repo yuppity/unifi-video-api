@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.2.0 (2020-XX-XX)
+## 0.2.0 (2020-10-19)
 
 ### Added
 * `UnifiVideoAPI.get_recordings()` for smarter recording listing
@@ -12,11 +12,18 @@
 * Datetime utilities
 * Keyword arg for `UnifiVideoAPI` init: `utc_offset_sec`
 * Throw `UnifiVideoHTTPError` on HTTP 400 from UniFi Video
-* `UnifiVideoRecording` attributes: `start_time`, `end_time`
+* `UnifiVideoRecording` attributes: `start_time_utc`, `end_time_utc`
+* `UnifiVideoAPI.delete_all_recordings()`
 
 ### Changed
 * Accept start and end times as `datetime`, `int` or `str` in
   `UnifiVideoCamera.recording_between()`
+* UTC offset is now per UniFi Video instance instead of per camera
+* Use `UnifiVideoAPI.get_recordings()` internally
+* Refactored `UnifiVideoCamera.refresh_cameras()` to account for
+  all three camera collections (`UnifiVideoAPI.{,managed_,active_}cameras`)
+* `UnifiVideoCamera.recording_between()` uses new dt util for the
+  `{start,end}_time` args
 
 ## 0.1.8 (2020-09-03)
 
