@@ -4,6 +4,7 @@ from .single import UnifiVideoSingle
 from datetime import datetime
 
 endpoints = {
+    'recording': lambda x: 'recording/{}'.format(x),
     'download': lambda x: 'recording/{}/download'.format(x),
     'delete': lambda x: 'recording?recordings[]={}&confirmed=true'.format(x),
     'snapshot': lambda c, d, r, w: \
@@ -123,6 +124,72 @@ class UnifiVideoRecording(UnifiVideoSingle):
         """Delete recording
         """
         return self._api.delete(endpoints['delete'](self._id))
+
+    def refresh(self):
+        '''Refresh recording's data from UniFi Video
+        '''
+        self._load_data(
+            self._extract_data(
+                self._api.get(endpoints['recording'](self._id))))
+
+    def _control_lock(self, remove=False, verify=False):
+        '''Control recording's lock state
+
+        Arguments:
+            remove (bool):
+                Remove lock
+            verify (bool):
+                Refetch recording data from UniFi Video to verify
+                the action was registered
+
+        Returns:
+            bool: Action success
+        '''
+
+        if self.locked is not remove:
+            return True
+
+        new_rec_state = dict(self._data)
+        new_rec_state['locked'] = not remove
+
+        put_success = self._api.put(
+            endpoints['recording'](self._id), data=new_rec_state)
+
+        if not put_success:
+            return False
+
+        if verify:
+            self.refresh()
+        else:
+            self._load_data(self._extract_data(put_success))
+
+        return self.locked is not remove
+
+    def lock(self, verify=False):
+        '''Lock recording
+
+        Arguments:
+            verify (bool):
+                Refetch recording data from UniFi Video to verify
+                the lock was registered
+
+        Returns:
+            bool: Action success
+        '''
+        return self._control_lock(remove=False, verify=verify)
+
+    def unlock(self, verify=False):
+        '''Unlock recording
+
+        Arguments:
+            verify (bool):
+                Refetch recording data from UniFi Video to verify
+                the lock was registered
+
+        Returns:
+            bool: Action success
+        '''
+        return self._control_lock(remove=True, verify=verify)
 
     def __str__(self):
         return '{}: {}'.format(type(self).__name__, {
