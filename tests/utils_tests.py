@@ -88,7 +88,6 @@ class UtilitiesTests(unittest.TestCase):
         for test_pair in test_pairs:
             try:
                 if isinstance(test_pair[0][1], str):
-                    print(test_pair[0][0])
                     self.assertEqual(
                         test_pair[1] * 1000,
                         unifi_video.utils.dt_resolvable_to_ms(
