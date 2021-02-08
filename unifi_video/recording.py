@@ -8,8 +8,8 @@ endpoints = {
     'download': lambda x: 'recording/{}/download'.format(x),
     'delete': lambda x: 'recording?recordings[]={}&confirmed=true'.format(x),
     'snapshot': lambda c, d, r, w: \
-        'snapshot/recording/{}/{}/{}?width={}'.format(c,
-            d.strftime('%Y/%m/%d'), r, w),
+        'snapshot/recording/{}/{}/{}{}'.format(c,
+            d.strftime('%Y/%m/%d'), r, '?width={}'.format(w) if w else ''),
     'motion': lambda x: 'recording/{}/motion?alpha=true'.format(x),
 }
 
@@ -96,11 +96,11 @@ class UnifiVideoRecording(UnifiVideoSingle):
         return self._api.get(endpoints['motion'](self._id),
             filename if filename else 'motion-{}.png'.format(self._id))
 
-    def snapshot(self, width=600, filename=None):
+    def snapshot(self, width=0, filename=None):
         """Download recording thumbnail
 
         Arguments:
-            width (int): Image pixel width
+            width (int): Image pixel width. If 0 (of False), return maximum size
             filename (str, NoneType, bool): Filename (`str`) to save the
                 image as or ``True`` (`bool`) if you want the response body
                 as a return value. You can also leave this out or set it to
@@ -116,7 +116,7 @@ class UnifiVideoRecording(UnifiVideoSingle):
         """
 
         return self._api.get(endpoints['snapshot'](self.cameras[0],
-            self.start_time, self._id, width), filename if filename else \
+            self.start_time, self._id, int(width)), filename if filename else \
                     'recording-{}-{}.jpg'.format(self._id,
                         self.start_time.isoformat()))
 
