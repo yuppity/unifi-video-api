@@ -7,6 +7,7 @@
   The change matches the behaviour of `UnifiVideoCamera.snapshot()` in that
   unless explicitly given, the width is determined by the UniFi Video server.
 * Expose camera UUIDs (`UnifiVideoCamera.uuid`)
+* Expose camera host addresses (`UnifiVideoCamera.host`)
 
 ## 0.2.0 (2020-10-19)
 
