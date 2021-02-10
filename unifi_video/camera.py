@@ -192,6 +192,10 @@ class UnifiVideoCamera(UnifiVideoSingle):
     Attributes:
         name (str or NoneType):
             Camera name
+        uuid (str):
+            Camera UUID
+        host (str):
+            Camera host address
         model (str or NoneType):
             Camera model
         platform (str or NoneType):
