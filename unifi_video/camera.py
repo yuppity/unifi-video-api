@@ -256,6 +256,7 @@ class UnifiVideoCamera(UnifiVideoSingle):
         self._id = data['_id']
         self.name = data.get('name', None)
         self.uuid = data.get('uuid', '')
+        self.host = data.get('host', '')
         self.platform = data.get('platform', None)
         self.overlay_text = data.get('osdSettings', {}).get('tag', None)
         self.mac_addr = utils.format_mac_addr(data.get('mac', 'ffffffffffff'))
