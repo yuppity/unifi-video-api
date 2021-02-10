@@ -1,13 +1,16 @@
 # CHANGELOG
 
-## x.x.x (2021-0x-xx)
+## 0.3.0 (2021-02-10)
+
+### Added
+* Support for locking and unlocking recordings
+* Exposed camera UUIDs (`UnifiVideoCamera.uuid`)
+* Exposed camera host addresses (`UnifiVideoCamera.host`)
 
 ### Changed
 * The `width=600` parameter of `UnifiVideoRecording.snapshot()` is now `width=0`.
   The change matches the behaviour of `UnifiVideoCamera.snapshot()` in that
   unless explicitly given, the width is determined by the UniFi Video server.
-* Expose camera UUIDs (`UnifiVideoCamera.uuid`)
-* Expose camera host addresses (`UnifiVideoCamera.host`)
 
 ## 0.2.0 (2020-10-19)
 
