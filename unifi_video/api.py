@@ -514,7 +514,7 @@ class UnifiVideoAPI(object):
 
         url_params = {
             'sortBy': 'startTime',
-            'order': order,
+            'sort': order,
             'idsOnly': req_each,
             'limit': limit if limit else None,
             'cause': rec_types[rec_type],
