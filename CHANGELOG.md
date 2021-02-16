@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.3.1 (2021-02-16)
+
+### Fixed
+* Wrongly named URL param in `UnifiVideoAPI.get_recordings()` rendered
+  the `order` parameter ineffective.
+
 ## 0.3.0 (2021-02-10)
 
 ### Added
