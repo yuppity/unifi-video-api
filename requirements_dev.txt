@@ -14,7 +14,7 @@ mistune==0.8.4
 mock==2.0.0
 packaging==18.0
 pbr==5.1.1
-Pygments==2.3.1
+Pygments==2.7.4
 pyparsing==2.3.0
 pytz==2018.7
 recommonmark==0.4.0
